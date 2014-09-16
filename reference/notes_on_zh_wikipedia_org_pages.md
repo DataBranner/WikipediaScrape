@@ -13,4 +13,8 @@
 >
 > 本模板套用字詞轉換基礎模板實現（請參看Template:CH/doc），使用上相對簡單，但也存在一些限制性，全文轉換項目不能超過30個，如果要突破這些局限，請直接使用字詞轉換基礎模板組合。
 
+   See also https://zh.wikipedia.org/wiki/Template:NoteTA/lua.
+
+ 1. The API does not currently list `noteta` as an option.
+
 [end]
