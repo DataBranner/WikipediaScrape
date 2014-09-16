@@ -5,6 +5,22 @@
         <div class="noteTA-title" 
              data-noteta-code="zh-hans:文档对象模型; zh-hant:文件物件模型;"></div>
 
+   There is also code to control the appearance of the menu for choosing regional variants:
+
+        <div class="metadata topicon noprint nopopups noteTA-topicon" 
+             title="本页使用了标题或全文手工转换" 
+             id="noteTA-topicon-203078" 
+             style="display: none;padding:0px 2px;">
+          <img alt="本页使用了标题或全文手工转换"
+              src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zh_conversion_icon_m.svg/35px-Zh_conversion_icon_m.svg.png" 
+             width="35" 
+             height="22"
+             srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zh_conversion_icon_m.svg/53px-Zh_conversion_icon_m.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Zh_conversion_icon_m.svg/70px-Zh_conversion_icon_m.svg.png 2x" 
+             data-file-width="32" 
+             data-file-height="20" />
+        </div>
+
+
  1. There is a module `NoteTA` to choose the correct form. (See https://zh.wikipedia.org/zh/%E6%A8%A1%E5%9D%97:NoteTA and https://zh.wikipedia.org/wiki/MediaWiki:Gadget-noteTA.js; accessed 20140916.)
 
  1. Justification (https://zh.wikibooks.org/zh-tw/Template:NoteTA):
