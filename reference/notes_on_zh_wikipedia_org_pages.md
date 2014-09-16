@@ -54,7 +54,7 @@
             大陆：矩阵革命；台灣：最後戰役；香港：驚變世紀；当前显示为：矩阵革命
             简体：程序；繁體：程式；当前显示为：程序
 
- 1. There is a module `NoteTA` to choose the correct form. (See https://zh.wikipedia.org/zh/%E6%A8%A1%E5%9D%97:NoteTA and https://zh.wikipedia.org/wiki/MediaWiki:Gadget-noteTA.js; accessed 20140916.)
+ 1. There is a module `NoteTA` to choose the correct form. (See [https://zh.wikipedia.org/zh/模块:NoteTA](https://zh.wikipedia.org/zh/%E6%A8%A1%E5%9D%97:NoteTA) and https://zh.wikipedia.org/wiki/MediaWiki:Gadget-noteTA.js; accessed 20140916.)
 
  1. Justification (https://zh.wikibooks.org/zh-tw/Template:NoteTA):
 
