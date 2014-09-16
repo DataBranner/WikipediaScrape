@@ -5,7 +5,7 @@
         <div class="noteTA-title" 
              data-noteta-code="zh-hans:文档对象模型; zh-hant:文件物件模型;"></div>
 
-   There is also code to control the appearance of the menu for choosing regional variants:
+   There is also code to control the appearance (etc.) of the menu for choosing regional variants:
 
         <div class="metadata topicon noprint nopopups noteTA-topicon" 
              title="本页使用了标题或全文手工转换" 
