@@ -16,5 +16,11 @@
    See also https://zh.wikipedia.org/wiki/Template:NoteTA/lua.
 
  1. The API does not currently list `noteta` as an option.
+ 
+ 1. In API, `action=query` is most likely to be what I need to use.
+ 
+ 1. "Token" required for editing, but perhaps not otherwise. (See https://www.mediawiki.org/wiki/Manual:Edit_token, accessed 20140916.)
+ 
+ 
 
 [end]
