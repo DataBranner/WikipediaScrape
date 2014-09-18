@@ -1,0 +1,59 @@
+Slovenčina
+Slovenščina
+
+Norsk bokmål
+Norsk nynorsk
+
+
+Different solution with: https://sh.wikipedia.org/wiki/Glavna_stranica_/_Главна_страница
+
+https://sr.wikipedia.org/sr/%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B0
+
+https://ku.wikipedia.org/wiki/Ziman%C3%AA_kurd%C3%AE
+
+https://tg.wikipedia.org/wiki/Забони_тоҷикӣ
+
+https://uz.wikipedia.org/wiki/O%CA%BBzbek_tili
+
+Three scripts:
+https://kk.wikipedia.org/wiki/%D2%9A%D0%B0%D0%B7%D0%B0%D2%9B_%D1%82%D1%96%D0%BB%D1%96
+
+
+Other simplified/traditional:
+https://zh-yue.wikipedia.org/wiki/%E7%B2%B5%E8%AA%9E
+https://gan.wikipedia.org/wiki/%E8%B4%9B%E8%AA%9E
+
+Cyrillic template-links and Latin content! https://tt.wikipedia.org/wiki/Tatar_tele
+And some Cyrillic content
+https://tt.wikipedia.org/wiki/%D0%94%D0%B0%D1%86%D1%8E%D0%B0%D0%BD%D1%8C-%D0%A2%D0%B0%D1%82%D0%B0%D1%80_%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8_%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%82%D0%B5
+
+Chinese vs. Latin: (Latin template-links and Chinese content!)
+https://cdo.wikipedia.org/wiki/M%C3%ACng-d%C4%95%CC%A4ng-ng%E1%B9%B3%CC%84
+https://cdo.wikipedia.org/wiki/%E9%96%A9%E6%9D%B1%E8%AA%9E
+
+
+https://zh-min-nan.wikipedia.org/wiki/B%C3%A2n-l%C3%A2m-g%C3%BA
+
+class "vectorMenu"
+ca-varlang-1 vs. ca-varlang-2
+https://iu.wikipedia.org/w/index.php?title=%E1%90%8A%E1%92%AA%E1%95%88%E1%92%83&variant=ike-latn
+
+Note "vectorMenu emptyPortlet" if not used.
+
+Various dialects of Emilia-Romana regional language: controlled by JS and findable by category:
+ * https://eml.wikipedia.org/wiki/Categoria:Arzân
+ * https://eml.wikipedia.org/wiki/Categoria:Bulgnais
+ * https://eml.wikipedia.org/wiki/Categoria:Carpśàn
+ * https://eml.wikipedia.org/wiki/Categoria:Frarés
+ * https://eml.wikipedia.org/wiki/Categoria:Mantuan
+ * https://eml.wikipedia.org/wiki/Categoria:Miranduléś
+ * https://eml.wikipedia.org/wiki/Categoria:Mudnés
+ * https://eml.wikipedia.org/wiki/Categoria:Piasintëin
+ * https://eml.wikipedia.org/wiki/Categoria:Rumagnòl
+This is in Carpśàn: https://eml.wikipedia.org/wiki/Cumunitê_Sorda
+
+Those on the same page, such as https://eml.wikipedia.org/wiki/Langua_emiglièna-rumagnôla
+
+
+https://cu.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B2%D1%A3%D0%BD%D1%8C%D1%81%D0%BA%D1%8A_%D1%A9%EA%99%81%EA%99%91%D0%BA%D1%8A
+has JS options: [ cyrs ] [ cyrl ] [ glag ]; the last is Glagolitic
