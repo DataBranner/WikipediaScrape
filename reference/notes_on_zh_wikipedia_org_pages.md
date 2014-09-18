@@ -1,5 +1,10 @@
 ## Notes on Zh.Wikipedia.Org pages
 
+ 1. Reference:
+   2. API here: https://www.mediawiki.org/wiki/API:Main_page.
+   2. Some mash-ups listed here: http://www.programmableweb.com/api/wikipedia.
+ 
+
  1. Variant names are marked with class `noteTA-title` and content `data-noteta-code`:
 
         <div class="noteTA-title" 
