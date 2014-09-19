@@ -7,10 +7,10 @@
 
 import urllib
 import sys
+import re
 import io
 import traceback
 import lxml.etree
-parser = lxml.etree.HTMLParser(recover=False, encoding='utf-8')
 
 def hexify(title):
     """Generate a hex string from kanji string, with percent-prefixing."""
@@ -43,8 +43,11 @@ def fetch_page_html(title):
 
 def get_words(title):
     """Return list of dictionaries: words in tags marked data-noteta-code."""
+    # We want to see any errors, so parser recover = False.
+    parser = lxml.etree.HTMLParser(recover=False)
     results = []
     page = fetch_page_html(title)
+    root = None
     try:
         # Earlier used:
         #     lxml.etree.parse(io.StringIO(page.decode()), parser)
@@ -53,11 +56,15 @@ def get_words(title):
     except lxml.etree.XMLSyntaxError:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback.print_exception(exc_type, exc_value, exc_traceback)
-        with open('problem_page_' + title + '.txt', 'wb') as f:
-            f.write(page)
-        sys.exit()
     if root:
         divs = root.xpath('//div[@data-noteta-code]')
+    else:
+        # Retrying with recover=True
+        print('Retrying with recover=True')
+        parser = lxml.etree.HTMLParser(recover=True)
+        root = lxml.etree.parse(io.BytesIO(page), parser)
+        if root:
+            divs = root.xpath('//div[@data-noteta-code]')
     if divs:
         # Typical div.values() item is a string:
         #     'zh-cn:艾波克; zh-tw:艾巴; zh-hk:天啟;'
@@ -69,3 +76,20 @@ def get_words(title):
                     d[k] = v
             results.append(d)
     return results
+
+def get_links(title):
+    """Return list of all links on page."""
+    page = fetch_page_html(title)
+    parser = lxml.etree.HTMLParser(recover=True)
+    root = lxml.etree.parse(io.BytesIO(page), parser)
+    if root:
+        urls = root.xpath('//a/@href')
+    if urls:
+        urls = [re.sub('[&#].+$', r'', item) for item in urls 
+                if item.find('action=') == -1 and 
+                   re.search('^/wiki/', item)]
+    return urls
+
+def main(title):
+    page = fetch_page_html(title)
+    return page
