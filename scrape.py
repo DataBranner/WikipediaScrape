@@ -3,10 +3,14 @@
 # David Prager Branner
 # 20140918
 
+"""Supply functions for studying Chinese Wikipedia pages."""
+
 import urllib
+import sys
 import io
+import traceback
 import lxml.etree
-parser = lxml.etree.HTMLParser()
+parser = lxml.etree.HTMLParser(recover=False, encoding='utf-8')
 
 def hexify(title):
     """Generate a hex string from kanji string, with percent prefixing."""
@@ -30,15 +34,29 @@ def fetch_page_api(title):
 
 def fetch_page_html(title):
     api = 'https://zh.wikipedia.org/wiki/' + hexify(title)
-    page = urllib.request.urlopen(api).read()
+    try:
+        page = urllib.request.urlopen(api).read()
+    except Exception as e:
+        print(e)
     return page
 
 def get_words(title):
+    """Return list of dictionaries: words in tags marked data-noteta-code."""
+    results = []
     page = fetch_page_html(title)
-    root = lxml.etree.parse(io.StringIO(page.decode()), parser)
-    # Note: Obama page returns empty but shouldn't - too long?
-    codes = root.xpath('//div[@data-noteta-code]')
-    ds = []
+    try:
+        # Earlier used:
+        #     lxml.etree.parse(io.StringIO(page.decode()), parser)
+        # got lxml.etree.XMLSyntaxError. Fixed with BytesIO.
+        root = lxml.etree.parse(io.BytesIO(page), parser)
+    except lxml.etree.XMLSyntaxError:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_exception(exc_type, exc_value, exc_traceback)
+        with open('problem_page_' + title + '.txt', 'wb') as f:
+            f.write(page)
+        sys.exit()
+    if root:
+        codes = root.xpath('//div[@data-noteta-code]')
     if codes:
         for code in [code.values()[-1].split(';') for code in codes]:
             d = {}
@@ -46,5 +64,5 @@ def get_words(title):
                 if pair:
                     k, v = pair.strip(' ').split(':')
                     d[k] = v
-            ds.append(d)
-    return ds
+            results.append(d)
+    return results
