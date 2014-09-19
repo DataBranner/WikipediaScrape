@@ -13,7 +13,7 @@ import lxml.etree
 parser = lxml.etree.HTMLParser(recover=False, encoding='utf-8')
 
 def hexify(title):
-    """Generate a hex string from kanji string, with percent prefixing."""
+    """Generate a hex string from kanji string, with percent-prefixing."""
     # Timeit shows encode() to have same running time as bytes(str, 'utf-8')
     return ('%' +
             '%'.join([hex(item)[2:].upper() for item in list(title.encode())]
@@ -33,9 +33,10 @@ def fetch_page_api(title):
     return page
 
 def fetch_page_html(title):
-    api = 'https://zh.wikipedia.org/wiki/' + hexify(title)
+    """Construct URL for page using title."""
+    url = 'https://zh.wikipedia.org/wiki/' + hexify(title)
     try:
-        page = urllib.request.urlopen(api).read()
+        page = urllib.request.urlopen(url).read()
     except Exception as e:
         print(e)
     return page
@@ -56,13 +57,15 @@ def get_words(title):
             f.write(page)
         sys.exit()
     if root:
-        codes = root.xpath('//div[@data-noteta-code]')
-    if codes:
-        for code in [code.values()[-1].split(';') for code in codes]:
+        divs = root.xpath('//div[@data-noteta-code]')
+    if divs:
+        # Typical div.values() item is a string:
+        #     'zh-cn:艾波克; zh-tw:艾巴; zh-hk:天啟;'
+        for code in [div.values()[-1].split(';') for div in divs]:
             d = {}
             for pair in code:
                 if pair:
-                    k, v = pair.strip(' ').split(':')
+                    k, v = pair.lstrip(' ').split(':')
                     d[k] = v
             results.append(d)
     return results
