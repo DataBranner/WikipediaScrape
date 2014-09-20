@@ -41,12 +41,11 @@ def fetch_page_html(title):
         print(e)
     return page
 
-def get_words(title):
+def get_words(page):
     """Return list of dictionaries: words in tags marked data-noteta-code."""
     # We want to see any errors, so parser recover = False.
     parser = lxml.etree.HTMLParser(recover=False)
     results = []
-    page = fetch_page_html(title)
     root = None
     try:
         # Earlier used:
@@ -77,19 +76,21 @@ def get_words(title):
             results.append(d)
     return results
 
-def get_links(title):
+def get_links(page):
     """Return list of all links on page."""
-    page = fetch_page_html(title)
     parser = lxml.etree.HTMLParser(recover=True)
     root = lxml.etree.parse(io.BytesIO(page), parser)
     if root:
         urls = root.xpath('//a/@href')
     if urls:
-        urls = [re.sub('[&#].+$', r'', item) for item in urls 
-                if item.find('action=') == -1 and 
-                   re.search('^/wiki/', item)]
+        urls = [re.sub('[&#].+$', r'', item) for item in urls if
+                item.find('action=') == -1 and
+               re.search('^/wiki/', item) and
+               not re.search('\....$', item)]
     return urls
 
 def main(title):
     page = fetch_page_html(title)
-    return page
+    words = get_words(page)
+    links = get_links(page)
+    return words, links
