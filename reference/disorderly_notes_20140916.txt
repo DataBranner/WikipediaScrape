@@ -27,6 +27,10 @@ Cyrillic template-links and Latin content! https://tt.wikipedia.org/wiki/Tatar_t
 And some Cyrillic content
 https://tt.wikipedia.org/wiki/%D0%94%D0%B0%D1%86%D1%8E%D0%B0%D0%BD%D1%8C-%D0%A2%D0%B0%D1%82%D0%B0%D1%80_%D0%BC%D0%B8%D0%BB%D0%BB%D0%B8_%D0%B2%D0%BE%D0%BB%D0%BE%D1%81%D1%82%D0%B5
 
+ * https://tt.wikipedia.org/wiki/Axämenid_Däwläte
+ * https://tt.wikipedia.org/wiki/Tatar_tele
+ * https://tt.wikipedia.org/wiki/Ruslar
+
 Chinese vs. Latin: (Latin template-links and Chinese content!)
 https://cdo.wikipedia.org/wiki/M%C3%ACng-d%C4%95%CC%A4ng-ng%E1%B9%B3%CC%84
 https://cdo.wikipedia.org/wiki/%E9%96%A9%E6%9D%B1%E8%AA%9E

@@ -1,3 +1,4 @@
+SQLAlchemy==0.9.7
 beautifulsoup4==4.3.2
 gnureadline==6.3.3
 ipython==2.2.0
