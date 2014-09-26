@@ -12,6 +12,9 @@
    2. links to pages listing new pages: one unique link per line; to be used if "to request" list gets sparse.
  1. Errors to fix:
    2. In `get_words()`, one error found here was `pair = "zh-cn:地址栏zh-tw:網址列"`. Can we divide on the known keys if error?
+   2. But also cases of single words, which we can't handle: `"月台", "恒生", "琼", "平台", "入伙"`, etc.
+   2. And some cases where the keys are in Chinese: `"中国大陆：昂山素季；台灣：翁山蘇姬；香港：昂山素姬"`, etc.
+ 1. Many malformed HTML errors from `lxml`, too!
 
 [end]
 
