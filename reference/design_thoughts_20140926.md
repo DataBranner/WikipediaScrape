@@ -4,7 +4,7 @@
  1. Since we don't want to bombard server, time the roundtrip: compose request, send request, receive data, process and store data. The Wikipedia article on [Bot best practices](https://en.wikipedia.org/wiki/Wikipedia:Creating_a_bot#Bot_best_practices) (accessed 20140926) suggests "limit the total requests (read and write requests together) to no more than 10/minute." Timings (page-end has data sent):
    2. 5.63 s for 20 items, no synonyms.
    2. 23 s for 65 items, some synonyms.
-   2. 15:53 m for 1094 items, some synonyms.
+   2. 15:53 m for 1094 items, some synonyms. Average of .87 seconds / item. This includes printing `lxml` errors to the screen and retrying the parsing.
  1. Use raw kanji for file names, not %-delimited hex names — greater readability, but slight processing delay.
  1. Files:
    2. scraped dictionary of synonyms: one dict to file, named by source file;
