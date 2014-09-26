@@ -1,1 +1,1 @@
-*.blur filter=git-crypt diff=git-crypt
+*.blur filter=git-blur diff=git-blur
