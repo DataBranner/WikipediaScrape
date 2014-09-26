@@ -10,6 +10,8 @@
    2. links to request: single file, one unique link per line;
    2. links already requested: single file, one unique link per line and date requested;
    2. links to pages listing new pages: one unique link per line; to be used if "to request" list gets sparse.
+ 1. Errors to fix:
+   2. In `get_words()`, one error found here was `pair = "zh-cn:地址栏zh-tw:網址列"`. Can we divide on the known keys if error?
 
 [end]
 
