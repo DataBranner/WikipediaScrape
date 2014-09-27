@@ -39,6 +39,7 @@ def fetch_page_html(title):
         page = urllib.request.urlopen(url).read()
     except Exception as e:
         print(e)
+        page = b''
     return page
 
 def get_words(page):
@@ -71,7 +72,23 @@ def get_words(page):
             d = {}
             for pair in code:
                 if pair:
-                    k, v = pair.lstrip(' ').split(':')
+                    try:
+                        k, v = pair.lstrip(' ').split(':')
+                    except ValueError as e:
+                        # One error found here was "zh-cn:地址栏zh-tw:網址列".
+                        # Can we divide on the known keys if error?
+                        # Another error: "裁准". Not divisible.
+                        # Other errors: "月台", "恒生", "琼", "平台", "入伙",
+                        # "卡里", "格里", "特里", "范冰", "荃灣行人天橋網絡",
+                        # "網絡", "啓"
+                        # "中国大陆：昂山素季；台灣：翁山蘇姬；香港：昂山素姬",
+                        # "中国大陆：密集阵；台灣：方陣；香港：方陣",
+                        # "中国大陆：圣迭戈；台灣：聖地牙哥；香港：聖地牙哥",
+                        # "zh:-hk:資料", "平方公里",
+                        # "大陆、台湾：特斯拉；香港：忒斯拉；"
+                        # "zh-sg:简讯:", "zh-sg:面子书:"
+                        print('Error:\n    {}\n    {}'.format(e, pair))
+                        continue
                     d[k] = v
             results.append(d)
     return results
@@ -91,6 +108,7 @@ def get_links(page):
 
 def main(title):
     page = fetch_page_html(title)
-    words = get_words(page)
-    links = get_links(page)
-    return words, links
+    if page:
+        words = get_words(page)
+        links = get_links(page)
+        return words, links
