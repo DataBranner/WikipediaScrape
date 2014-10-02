@@ -7,6 +7,7 @@
 import utils as U
 import scrape as S
 import os
+import time
 
 def main():
     # Get the collection of links. 
@@ -69,6 +70,7 @@ def scrape_links(links, done_links=set()):
         U.store_links(links)
         # Update done_links.
         done_links.add(title)
+        time.sleep(5)
     return links, done_links
 
 if __name__ == '__main__':

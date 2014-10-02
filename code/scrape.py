@@ -99,6 +99,7 @@ def get_links(page):
     if root:
         urls = root.xpath('//a/@href')
         title = root.xpath('//title')[0].text
+        title = title.replace(' - 维基百科，自由的百科全书', '')
     if urls:
         urls = [re.sub('[&#].+$', r'', item) for item in urls if
                 item.find('action=') == -1 and
@@ -111,7 +112,8 @@ def get_links(page):
                 'User:' not in url and
                 'Special:' not in url and
                 'Project:' not in url and
-                'Category:' not in url]
+                'Help:' not in url and
+                'Portal:' not in url]
     return urls, title
 
 def main(title):
