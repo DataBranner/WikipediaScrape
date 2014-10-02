@@ -12,6 +12,13 @@ import traceback
 
 """Provide utilities for use with saving scraped data."""
 
+def hexify(title):
+    """Generate a hex string from kanji string, with percent-prefixing."""
+    # Timeit shows encode() to have same running time as bytes(str, 'utf-8')
+    return ('%' +
+            '%'.join([hex(item)[2:].upper() for item in list(title.encode())]
+           ))
+
 def construct_date(date_and_time=None):
     """Construct a time-and-date string for appending to a filename."""
     if not date_and_time:
@@ -62,10 +69,8 @@ def tar_data(data, title, target_dir='html_new'):
             print('\nData of cardinality {} saved, compressed to\n    "{}".'.
                     format(len(data), filename), end='\n\n')
     except Exception as e:
-        print(e)
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback.print_exception(exc_type, exc_value, exc_traceback)
-        # When finished, return to directory where we started.
     end_time = time.time()
     total_time = round(end_time - start_time)
     print('Total time elapsed in tarring: {} seconds.'.format(total_time))

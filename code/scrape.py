@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # scrape.py
 # David Prager Branner
-# 20140918
+# 20141002
 
-"""Supply functions for studying Chinese Wikipedia pages."""
+"""Given a Chinese Wikipedia page-title, return its links and synonyms."""
 
 import urllib
 import sys
@@ -11,13 +11,7 @@ import re
 import io
 import traceback
 import lxml.etree
-
-def hexify(title):
-    """Generate a hex string from kanji string, with percent-prefixing."""
-    # Timeit shows encode() to have same running time as bytes(str, 'utf-8')
-    return ('%' +
-            '%'.join([hex(item)[2:].upper() for item in list(title.encode())]
-           ))
+import utils as U
 
 def compose_api_req(title):
     return ('''http://zh.wikipedia.org/w/api.php?''' +
@@ -25,7 +19,7 @@ def compose_api_req(title):
           '''generator=allpages&''' +
           '''prop=info&''' +
           '''format=xml&''' +
-          '''titles=''' + hexify(title))
+          '''titles=''' + U.hexify(title))
 
 def fetch_page_api(title):
     api = compose_api_req(title)
@@ -34,7 +28,7 @@ def fetch_page_api(title):
 
 def fetch_page_html(title):
     """Construct URL for page using title."""
-    url = 'https://zh.wikipedia.org/wiki/' + hexify(title)
+    url = 'https://zh.wikipedia.org/wiki/' + U.hexify(title)
     try:
         page = urllib.request.urlopen(url).read()
     except Exception as e:
