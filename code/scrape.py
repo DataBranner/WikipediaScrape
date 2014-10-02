@@ -12,6 +12,7 @@ import io
 import traceback
 import lxml.etree
 import utils as U
+import string
 
 def compose_api_req(title):
     return ('''http://zh.wikipedia.org/w/api.php?''' +
@@ -28,7 +29,11 @@ def fetch_page_api(title):
 
 def fetch_page_html(title):
     """Construct URL for page using title."""
-    url = 'https://zh.wikipedia.org/wiki/' + U.hexify(title)
+    # Decide if title needs to be hexified or not.
+    chars = string.ascii_letters + string.digits + string.whitespace + '%:'
+    if any(i not in chars for i in set(title)):
+        title = U.hexify(title)
+    url = 'https://zh.wikipedia.org/wiki/' + title
     try:
         page = urllib.request.urlopen(url).read()
     except Exception as e:
@@ -36,7 +41,7 @@ def fetch_page_html(title):
         page = b''
     return page
 
-def get_words(page):
+def get_synonyms(page):
     """Return list of dictionaries: words in tags marked data-noteta-code."""
     # We want to see any errors, so parser recover = False.
     parser = lxml.etree.HTMLParser(recover=False)
@@ -93,16 +98,25 @@ def get_links(page):
     root = lxml.etree.parse(io.BytesIO(page), parser)
     if root:
         urls = root.xpath('//a/@href')
+        title = root.xpath('//title')[0].text
     if urls:
         urls = [re.sub('[&#].+$', r'', item) for item in urls if
                 item.find('action=') == -1 and
                re.search('^/wiki/', item) and
                not re.search('\....$', item)]
-    return urls
+        urls = [url.replace('/wiki/', '') for url in urls if url]
+        urls = [url for url in urls if 
+                '/' not in url and 
+                'Wikipedia:' not in url and 
+                'User:' not in url and
+                'Special:' not in url and
+                'Project:' not in url and
+                'Category:' not in url]
+    return urls, title
 
 def main(title):
     page = fetch_page_html(title)
     if page:
-        words = get_words(page)
-        links = get_links(page)
-        return words, links
+        synonyms = get_synonyms(page)
+        links, title = get_links(page)
+        return page, title, synonyms, links

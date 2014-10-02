@@ -43,22 +43,41 @@ def open_directory(path):
     file_list = glob.glob(path+'*')
     return file_list
 
-def tar_data(data, title, target_dir='html_new'):
-    """Compress `data` and save into `target_dir`."""
+def store_links(new_links):
+    """Add `links` to contents of existing links file and re-save."""
+    start_time = time.time()
+    if not len(new_links):
+        return 0
+    filename = os.path.join('..', 'data', 'links', 'links_unscraped.txt')
+    with open(filename, 'r') as f:
+        links = f.read()
+    links = set(links.split('\n'))
+    links.update(new_links)
+    links = '\n'.join(list(links))
+    with open(filename, 'w') as f:
+        f.write(links)
+    end_time = time.time()
+    total_time = round(end_time - start_time)
+    print('Total time elapsed in handling links: {} seconds.'
+            .format(total_time))
+
+def store_data(data, title, target_dir='html_new', tar=True):
+    """Store `data` in `target_dir`, compressed if so requested."""
     if not len(data):
         return 0
     start_time = time.time()
-    home_dir = os.getcwd()
     target_dir = os.path.join('..', 'data', target_dir)
-    # Save data to file "temp".
-    temp_filename = os.path.join(target_dir, 'temp')
-    with open(temp_filename, 'wb') as f:
-        f.write(data)
     # Make sure target_dir exists in .. or create it.
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
         print('Created directory {}'.format('target_dir'), end='\n\n')
-    # Create filename for `data`.
+    # Save data to file "temp".
+    temp_filename = os.path.join(target_dir, title)
+    with open(temp_filename, 'wb') as f:
+        f.write(data)
+    if not tar:
+        return 'uncompressed'
+    # Create filename for compressed `data`.
     filename = os.path.join(
             target_dir, title + '_' + construct_date() + '.tar.bz2')
     print(filename)
@@ -74,7 +93,7 @@ def tar_data(data, title, target_dir='html_new'):
     end_time = time.time()
     total_time = round(end_time - start_time)
     print('Total time elapsed in tarring: {} seconds.'.format(total_time))
-    return 1
+    return 'compressed'
 
 #def untar_directory(dir_name=None, check_db=True, db='qqq'):
 #    """Extract all archives in compressed/ into temporary/."""
