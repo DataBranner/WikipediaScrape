@@ -67,7 +67,6 @@ def main():
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 break_loop = True
                 break
-            links = ['Special:Random']
         # Clean up after exception.
     print('''Links now in "{}": {}\n'''
           '''Links now in "{}": {}'''.
@@ -87,8 +86,8 @@ def scrape_links(links, done_links):
         if title in done_links:
             continue
         page, title, synonyms, new_links = S.main(title)
-        print('Links remaining this loop: {}; synonyms: {}; {}'.
-                format(len(links), len(synonyms), title))
+        print('Links left: {}; synonyms: {}; new links: {}; {}'.
+                format(len(links), len(synonyms), len(new_links), title))
 #        print('''Data retrieved from title {}:'''
 #                '''\n    page-size: {}, synonyms:  {}, links:     {}'''.
 #                format(title, len(page), len(synonyms), len(new_links)))
