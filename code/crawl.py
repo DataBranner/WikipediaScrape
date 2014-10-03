@@ -94,8 +94,9 @@ def scrape_links(links, done_links):
         if title in done_links:
             continue
         page, title, synonyms, new_links = S.main(title)
-        links.update(new_links)
-        all_new_links.update(new_links)
+        links.update(set(new_links))
+        if title in links:
+            links.remove(title)
         print('Time: {}; Links left: {}; synonyms: {}; new links: {}; {}'.
                 format(int(time.time() - start_time), len(links), 
                        len(synonyms), len(new_links), title))
