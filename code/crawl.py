@@ -101,6 +101,7 @@ def scrape_links(links, done_links):
                     json.dumps(synonyms).encode(), title, 
                     target_dir='synonyms_new', tar=False)
 #        _ = U.store_links(new_links)
+        links.update(new_links)
         # Update done_links.
         done_links.add(title)
 #        print('''title "{}"\n    now added to done_links: {}'''
