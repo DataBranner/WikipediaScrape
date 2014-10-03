@@ -87,7 +87,10 @@ def scrape_links(links, done_links):
         if title in done_links:
             continue
         page, title, synonyms, new_links = S.main(title)
-        all_new_links.update(set(new_links))
+        if len(links) < 100:
+            links.update(all_new_links)
+        else:
+            all_new_links.update(new_links)
         print('Links left: {}; synonyms: {}; new links: {}; {}'.
                 format(len(links), len(synonyms), len(new_links), title))
 #        print('''Data retrieved from title {}:'''
@@ -101,7 +104,6 @@ def scrape_links(links, done_links):
                     json.dumps(synonyms).encode(), title, 
                     target_dir='synonyms_new', tar=False)
 #        _ = U.store_links(new_links)
-        links.update(new_links)
         # Update done_links.
         done_links.add(title)
 #        print('''title "{}"\n    now added to done_links: {}'''
