@@ -61,6 +61,7 @@ def main():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback)
             break
+        _, _, _, links = S.main('Special:RecentChanges')
     # Clean up after exception.
     print('''Links now in "{}": {}\n'''
           '''Links now in "{}": {}'''.
@@ -74,19 +75,11 @@ def main():
         f.write(done_links)
 
 def scrape_links(links, done_links):
-    redundant_found_this_loop = False
     while links:
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
-            if redundant_found_this_loop:
-                print('Title already in done_links; continuing', end='')
-                redundant_found_this_loop = True
-            else:
-                print('.', end='')
             continue
-        redundant_found_this_loop = False
-        print('\n')
         print('Links remaining to do this loop:', len(links))
         page, title, synonyms, new_links = S.main(title)
         print('''Data retrieved from title {}:'''
