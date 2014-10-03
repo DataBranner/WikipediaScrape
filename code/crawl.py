@@ -106,7 +106,7 @@ def scrape_links(links, done_links):
 #        print('''title "{}"\n    now added to done_links: {}'''
 #              '''\n    no longer in links: {}'''.
 #              format(title, title in done_links, title not in links))
-        print('Sleeping...\n')
+#        print('Sleeping...\n')
         time.sleep(4)
     return all_new_links, done_links
 
