@@ -79,12 +79,10 @@ def clean_up(unscraped_links_filename, links, done_links_filename, done_links):
           '''Links now in "{}": {}'''.
           format(unscraped_links_filename, len(links), 
                  done_links_filename, len(done_links)))
-    links = '\n'.join(links)
     with open(unscraped_links_filename, 'w') as f:
-        f.write(links)
-    done_links = '\n'.join(done_links)
+        f.write('\n'.join(links))
     with open(done_links_filename, 'w') as f:
-        f.write(done_links)
+        f.write('\n'.join(done_links))
 
 def scrape_links(links, done_links):
     start_time = time.time()
