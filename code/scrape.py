@@ -89,7 +89,7 @@ def get_synonyms(page, title):
                             content = f.read()
                         with open(os.path.join('..', 'data', 'malformed.txt'), 
                                 'w') as f:
-                            f.write(content + title +'\t' + pair)
+                            f.write(content + '\n' + title +'\t' + pair)
                         continue
                     d[k] = v
             results.append(d)
