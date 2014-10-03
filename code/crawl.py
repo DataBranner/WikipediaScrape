@@ -49,25 +49,23 @@ def main():
         done_links = set()
     print('Retrieved {} done links from {}'.
             format(len(done_links), done_links_filename))
-    try:
-        links, done_links = scrape_links(
-                links, done_links, unscraped_links_filename,
-                done_links_filename, start_time)
-    except KeyboardInterrupt:
-        print('''\nWe had KeyboardInterrupt; links: |{}|. '''.
-                format(len(links)))
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_exception(exc_type, exc_value, exc_traceback)
-    except Exception:
-        print('\nWe had Exception; links: |{}|.'.
-                format(len(links)))
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_exception(exc_type, exc_value, exc_traceback)
+    while True:
+        try:
+            links, done_links = scrape_links(
+                    links, done_links, unscraped_links_filename,
+                    done_links_filename, start_time)
+        except KeyboardInterrupt:
+            print('''\nWe had KeyboardInterrupt; links: |{}|. '''.
+                    format(len(links)))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback)
+            break
 
 def scrape_links(
     links, done_links, unscraped_links_filename, done_links_filename, 
     start_time):
     syn_count = len(os.listdir(os.path.join('..', 'data', 'synonyms_new')))
+    print('Found {} synonym-files at start of while-loop.\n'.format(syn_count))
     with open(unscraped_links_filename, 'a') as f, open(done_links_filename, 'a') as g:
         while links:
             old_link_length = len(links)
@@ -78,13 +76,23 @@ def scrape_links(
             # Ignore if title already done.
             if title in done_links:
                 continue
-            page, title, synonyms, new_links = S.main(title)
+            try:
+                page, title, synonyms, new_links = S.main(title)
+            except KeyboardInterrupt:
+                print('''\nWe met with KeyboardInterrupt; links: |{}|. '''.
+                        format(len(links)))
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
+                break
+            except Exception:
+                print('\nWe met with Exception; links: |{}|.'.
+                        format(len(links)))
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
             syn_count += len(synonyms)
-            if title in new_links:
-                new_links.remove(title)
-            new_links = new_links - links
+            new_links = new_links - links - set(title)
             links.update(new_links)
-            print('T: {}; links: +{}=>{}; syn.: +{}=>{}; {}'.
+            print('T: {}; links: + {:>4} => {:>}; syn.: + {} => {}; {}'.
                     format(int(time.time() - start_time), len(new_links), 
                            len(links), len(synonyms), syn_count, title))
             # Uncomment the following line to save whole pages (compressed).
