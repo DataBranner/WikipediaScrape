@@ -9,15 +9,9 @@ import time
 import os
 import tarfile
 import traceback
+import json
 
 """Provide utilities for use with saving scraped data."""
-
-def hexify(title):
-    """Generate a hex string from kanji string, with percent-prefixing."""
-    # Timeit shows encode() to have same running time as bytes(str, 'utf-8')
-    return ('%' +
-            '%'.join([hex(item)[2:].upper() for item in list(title.encode())]
-           ))
 
 def construct_date(date_and_time=None):
     """Construct a time-and-date string for appending to a filename."""
@@ -73,6 +67,8 @@ def store_data(data, title, target_dir='html_new', tar=True):
         print('Created directory {}'.format('target_dir'), end='\n\n')
     # Save data to file "temp".
     temp_filename = os.path.join(target_dir, title)
+#    if isinstance(data, list):
+#        data = json.dumps(data)
     with open(temp_filename, 'wb') as f:
         f.write(data)
     if not tar:
@@ -80,13 +76,13 @@ def store_data(data, title, target_dir='html_new', tar=True):
     # Create filename for compressed `data`.
     filename = os.path.join(
             target_dir, title + '_' + construct_date() + '.tar.bz2')
-    print(filename)
+#    print(filename)
     # Compress `data` and save into `target_dir`.
     try:
         with tarfile.open(filename, 'w:bz2') as f:
             f.add(temp_filename)
-            print('\nData of cardinality {} saved, compressed to\n    "{}".'.
-                    format(len(data), filename), end='\n\n')
+            print('Data of cardinality {} saved, compressed to\n    "{}".'.
+                    format(len(data), filename))
     except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback.print_exception(exc_type, exc_value, exc_traceback)

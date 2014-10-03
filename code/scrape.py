@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # scrape.py
 # David Prager Branner
-# 20141002
+# 20141002, works
 
 """Given a Chinese Wikipedia page-title, return its links and synonyms."""
 
@@ -13,6 +13,7 @@ import traceback
 import lxml.etree
 import utils as U
 import string
+import urllib.parse as P
 
 def compose_api_req(title):
     return ('''http://zh.wikipedia.org/w/api.php?''' +
@@ -20,7 +21,7 @@ def compose_api_req(title):
           '''generator=allpages&''' +
           '''prop=info&''' +
           '''format=xml&''' +
-          '''titles=''' + U.hexify(title))
+          '''titles=''' + P.quote(title))
 
 def fetch_page_api(title):
     api = compose_api_req(title)
@@ -32,7 +33,7 @@ def fetch_page_html(title):
     # Decide if title needs to be hexified or not.
     chars = string.ascii_letters + string.digits + string.whitespace + '%:'
     if any(i not in chars for i in set(title)):
-        title = U.hexify(title)
+        title = P.quote(title)
     url = 'https://zh.wikipedia.org/wiki/' + title
     try:
         page = urllib.request.urlopen(url).read()
@@ -44,7 +45,7 @@ def fetch_page_html(title):
 def get_synonyms(page):
     """Return list of dictionaries: words in tags marked data-noteta-code."""
     # We want to see any errors, so parser recover = False.
-    parser = lxml.etree.HTMLParser(recover=False)
+    parser = lxml.etree.HTMLParser(recover=True)
     results = []
     root = None
     try:
@@ -57,13 +58,6 @@ def get_synonyms(page):
         traceback.print_exception(exc_type, exc_value, exc_traceback)
     if root:
         divs = root.xpath('//div[@data-noteta-code]')
-    else:
-        # Retrying with recover=True
-        print('Retrying with recover=True')
-        parser = lxml.etree.HTMLParser(recover=True)
-        root = lxml.etree.parse(io.BytesIO(page), parser)
-        if root:
-            divs = root.xpath('//div[@data-noteta-code]')
     if divs:
         # Typical div.values() item is a string:
         #     'zh-cn:艾波克; zh-tw:艾巴; zh-hk:天啟;'
@@ -105,15 +99,23 @@ def get_links(page):
                 item.find('action=') == -1 and
                re.search('^/wiki/', item) and
                not re.search('\....$', item)]
-        urls = [url.replace('/wiki/', '') for url in urls if url]
+        urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
         urls = [url for url in urls if 
                 '/' not in url and 
-                'Wikipedia:' not in url and 
-                'User:' not in url and
                 'Special:' not in url and
                 'Project:' not in url and
                 'Help:' not in url and
-                'Portal:' not in url]
+                'Portal:' not in url and
+                'Wikipedia:' not in url and 
+                'User:' not in url and
+                'Template:' not in url and
+                'Wikipedia_talk:' not in url and
+                'User_talk:' not in url and
+                'User talk:' not in url and
+                'Category talk:' not in url and
+                'Category_talk:' not in url and
+                'Template talk:' not in url and
+                'Talk:' not in url]
     return urls, title
 
 def main(title):
