@@ -89,6 +89,7 @@ def scrape_links(
                         format(len(links)))
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
+                print('\n')
             syn_count += len(synonyms)
             new_links = new_links - links - set(title)
             links.update(new_links)
