@@ -67,7 +67,14 @@ def main():
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 break_loop = True
                 break
-        # Clean up after exception.
+            clean_up(
+                    unscraped_links_filename, links, done_links_filename, 
+                    done_links)
+        clean_up(unscraped_links_filename, links, done_links_filename, 
+                done_links)
+
+def clean_up(unscraped_links_filename, links, done_links_filename, done_links):
+    """Clean up after exception."""
     print('''Links now in "{}": {}\n'''
           '''Links now in "{}": {}'''.
           format(unscraped_links_filename, len(links), 
@@ -80,19 +87,18 @@ def main():
         f.write(done_links)
 
 def scrape_links(links, done_links):
-    all_new_links = set()
-    while links:
+    start_time = time.time()
+    while links and time.time() - start_time < 100:
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
             continue
         page, title, synonyms, new_links = S.main(title)
-        if len(links) < 100:
-            links.update(all_new_links)
-        else:
-            all_new_links.update(new_links)
-        print('Links left: {}; synonyms: {}; new links: {}; {}'.
-                format(len(links), len(synonyms), len(new_links), title))
+        links.update(new_links)
+        all_new_links.update(new_links)
+        print('Time: {}; Links left: {}; synonyms: {}; new links: {}; {}'.
+                format(int(time.time() - start_time), len(links), 
+                       len(synonyms), len(new_links), title))
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         if synonyms:
@@ -102,7 +108,8 @@ def scrape_links(links, done_links):
         # Update done_links.
         done_links.add(title)
         time.sleep(2)
-    return all_new_links, done_links
+    print('Time: {} seconds.'.format(int(time.time() - start_time)))
+    return new_links, done_links
 
 if __name__ == '__main__':
     main()
