@@ -101,7 +101,7 @@ def scrape_links(links, done_links):
                     target_dir='synonyms_new', tar=False)
         # Update done_links.
         done_links.add(title)
-        time.sleep(4)
+        time.sleep(2)
     return all_new_links, done_links
 
 if __name__ == '__main__':
