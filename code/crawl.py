@@ -22,7 +22,7 @@ def main():
         with open(unscraped_links_filename, 'r') as f:
             links = f.read()
         links = links.split('\n')
-        print('Retrieved {} unscraped links from file\n    {}'.
+        print('Retrieved {} unscraped links from {}'.
                 format(len(links), unscraped_links_filename))
         # If empty, collect newest links (ignore other matter). 
         #     http://en.wikipedia.org/wiki/Special:RecentChanges
@@ -48,7 +48,7 @@ def main():
         done_links = set(done_links.split('\n'))
         if done_links == {''}:
             done_links = set()
-        print('Retrieved {} done links from file\n    {}'.
+        print('Retrieved {} done links from {}'.
                 format(len(done_links), done_links_filename))
         while links:
             try:
@@ -80,12 +80,14 @@ def main():
         f.write(done_links)
 
 def scrape_links(links, done_links):
+    all_new_links = set()
     while links:
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
             continue
         page, title, synonyms, new_links = S.main(title)
+        all_new_links.update(set(new_links))
         print('Links left: {}; synonyms: {}; new links: {}; {}'.
                 format(len(links), len(synonyms), len(new_links), title))
 #        print('''Data retrieved from title {}:'''
@@ -94,7 +96,7 @@ def scrape_links(links, done_links):
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         if synonyms:
-            print('Synonyms:', synonyms)
+#            print('Synonyms:', synonyms)
             _ = U.store_data(
                     json.dumps(synonyms).encode(), title, 
                     target_dir='synonyms_new', tar=False)
@@ -106,7 +108,7 @@ def scrape_links(links, done_links):
 #              format(title, title in done_links, title not in links))
         print('Sleeping...\n')
         time.sleep(4)
-    return new_links, done_links
+    return all_new_links, done_links
 
 if __name__ == '__main__':
     main()
