@@ -66,7 +66,7 @@ def store_data(data, title, target_dir='html_new', tar=True):
         os.makedirs(target_dir)
         print('Created directory {}'.format('target_dir'), end='\n\n')
     # Save data to file "temp".
-    temp_filename = os.path.join(target_dir, title)
+    temp_filename = os.path.join(target_dir, title + .txt)
 #    if isinstance(data, list):
 #        data = json.dumps(data)
     with open(temp_filename, 'wb') as f:
