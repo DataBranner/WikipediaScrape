@@ -89,7 +89,7 @@ def get_synonyms(page, title):
                             content = f.read()
                         with open(os.path.join('..', 'data', 'malformed.txt'), 
                                 'w') as f:
-                            f.write(content + '\n' + pair)
+                            f.write(content + '\n' + title +'\t' + pair)
                         continue
                     d[k] = v
             results.append(d)
@@ -124,6 +124,7 @@ def get_links(page):
                 'Category talk:' not in url and
                 'Category_talk:' not in url and
                 'Template talk:' not in url and
+                'Template_talk:' not in url and
                 'Talk:' not in url]
     return urls, title
 
