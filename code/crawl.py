@@ -57,28 +57,19 @@ def main():
                         links, done_links, unscraped_links_filename,
                         done_links_filename, start_time)
             except KeyboardInterrupt:
-                print('''\nWe had KeyboardInterrupt; links: |{}|. '''
-                      '''Now cleaning up.'''.format(len(links)))
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback.print_exception(exc_type, exc_value, exc_traceback)
-                break_loop = True
-                break
-            except Exception:
-                print('\nWe had Exception; links: |{}|. Now cleaning up.'.
+                print('''\nWe had KeyboardInterrupt; links: |{}|. '''.
                         format(len(links)))
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 break_loop = True
                 break
-
-def clean_up(unscraped_links_filename, links, done_links_filename, done_links):
-    """Clean up after exception."""
-#    print('''    Links now in "{}": {}'''.
-#          format(done_links_filename, len(done_links)))
-    with open(unscraped_links_filename, 'w') as f:
-        f.write('\n'.join(links))
-    with open(done_links_filename, 'w') as f:
-        f.write('\n'.join(done_links))
+            except Exception:
+                print('\nWe had Exception; links: |{}|.'.
+                        format(len(links)))
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
+                break_loop = True
+                break
 
 def scrape_links(
         links, done_links, unscraped_links_filename, done_links_filename, 
@@ -90,9 +81,9 @@ def scrape_links(
             if title in done_links:
                 continue
             page, title, synonyms, new_links = S.main(title)
-            links.update(set(new_links))
-            if title in links:
-                links.remove(title)
+            if title in new_links:
+                new_links.remove(title)
+            links.update(new_links)
             print('Time: {}; Links left: {}; synonyms: {}; new links: {}; {}'.
                     format(int(time.time() - start_time), len(links), 
                            len(synonyms), len(new_links), title))
@@ -111,4 +102,3 @@ def scrape_links(
 
 if __name__ == '__main__':
     main()
-        
