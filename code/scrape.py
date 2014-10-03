@@ -84,11 +84,11 @@ def get_synonyms(page, title):
                         # "zh-sg:简讯:", "zh-sg:面子书:"
                         print('Error:\n    {}\n    {}'.format(e, pair))
                         # Keep a record of these
-                        with open(os.path.join('..', 'data', 'malformed.txt', 
-                                'r')) as f:
+                        with open(os.path.join('..', 'data', 'malformed.txt'), 
+                                'r') as f:
                             content = f.read()
-                        with open(os.path.join('..', 'data', 'malformed.txt', 
-                                'w')) as f:
+                        with open(os.path.join('..', 'data', 'malformed.txt'), 
+                                'w') as f:
                             f.write(content + '\n' + pair)
                         continue
                     d[k] = v
