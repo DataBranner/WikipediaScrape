@@ -62,16 +62,16 @@ def main():
             traceback.print_exception(exc_type, exc_value, exc_traceback)
             break
     # Clean up after exception.
+    print('''Links now in "{}": {}\n'''
+          '''Links now in "{}": {}'''.
+          format(unscraped_links_filename, len(links), 
+                 done_links_filename, len(done_links)))
     links = '\n'.join(links)
     with open(unscraped_links_filename, 'w') as f:
         f.write(links)
     done_links = '\n'.join(done_links)
     with open(done_links_filename, 'w') as f:
         f.write(done_links)
-    print('''Links now in "{}": {}\n'''
-          '''Links now in "{}": {}'''.
-          format(unscraped_links_filename, len(links), 
-                 done_links_filename, len(done_links)))
 
 def scrape_links(links, done_links):
     redundant_found_this_loop = False
@@ -81,10 +81,11 @@ def scrape_links(links, done_links):
         if title in done_links:
             if redundant_found_this_loop:
                 print('Title already in done_links; continuing', end='')
+                redundant_found_this_loop = True
             else:
                 print('.', end='')
             continue
-        redundant_found_this_loop = True
+        redundant_found_this_loop = False
         print('\n')
         print('Links remaining to do this loop:', len(links))
         page, title, synonyms, new_links = S.main(title)
@@ -106,7 +107,6 @@ def scrape_links(links, done_links):
               format(title, title in done_links, title not in links))
         print('Sleeping...\n')
         time.sleep(6)
-    print('links:', links, 'len(done_links):', len(done_links))
     return links, done_links
 
 if __name__ == '__main__':
