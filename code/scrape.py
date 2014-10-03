@@ -126,7 +126,7 @@ def get_links(page):
                 'Template talk:' not in url and
                 'Template_talk:' not in url and
                 'Talk:' not in url]
-    return urls, title
+    return set(urls), title
 
 def main(title):
     page = fetch_page_html(title)

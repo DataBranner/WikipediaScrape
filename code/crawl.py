@@ -75,18 +75,17 @@ def main():
 
 def clean_up(unscraped_links_filename, links, done_links_filename, done_links):
     """Clean up after exception."""
-    print('''Links now in "{}": {}\n'''
-          '''Links now in "{}": {}'''.
-          format(unscraped_links_filename, len(links), 
-                 done_links_filename, len(done_links)))
+    print('''Links now in "{}": {}'''.
+          format(done_links_filename, len(done_links)))
     with open(unscraped_links_filename, 'w') as f:
         f.write('\n'.join(links))
     with open(done_links_filename, 'w') as f:
         f.write('\n'.join(done_links))
 
+
 def scrape_links(links, done_links):
     start_time = time.time()
-    while links and time.time() - start_time < 100:
+    while links and time.time() - start_time < 10:
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
@@ -107,8 +106,7 @@ def scrape_links(links, done_links):
         # Update done_links.
         done_links.add(title)
         time.sleep(2)
-    print('Time: {} seconds.'.format(int(time.time() - start_time)))
-    return new_links, done_links
+    return links, done_links
 
 if __name__ == '__main__':
     main()
