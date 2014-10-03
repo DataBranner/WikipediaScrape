@@ -75,6 +75,7 @@ def scrape_links(
                 sys.exit()
             # Ignore if title already done.
             if title in done_links:
+                links -= set(title)
                 continue
             try:
                 page, title, synonyms, new_links = S.main(title)
