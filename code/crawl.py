@@ -61,7 +61,7 @@ def main():
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback)
             break
-        _, _, _, links = S.main('Special:RecentChanges')
+        links = ['Special:Random']
     # Clean up after exception.
     print('''Links now in "{}": {}\n'''
           '''Links now in "{}": {}'''.
