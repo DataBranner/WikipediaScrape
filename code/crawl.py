@@ -15,6 +15,7 @@ import json
 
 def main():
     break_loop = False
+    start_time = time.time()
     while not break_loop:
         # Get the collection of links. 
         unscraped_links_filename = os.path.join(
@@ -52,7 +53,9 @@ def main():
                 format(len(done_links), done_links_filename))
         while links:
             try:
-                links, done_links = scrape_links(links, done_links)
+                links, done_links = scrape_links(
+                        links, done_links, unscraped_links_filename,
+                        done_links_filename, start_time)
             except KeyboardInterrupt:
                 print('''\nWe had KeyboardInterrupt; links: |{}|. '''
                       '''Now cleaning up.'''.format(len(links)))
@@ -60,51 +63,49 @@ def main():
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 break_loop = True
                 break
-            except TypeError:
-                print('\nWe had TypeError; links: |{}|. Now cleaning up.'.
+            except Exception:
+                print('\nWe had Exception; links: |{}|. Now cleaning up.'.
                         format(len(links)))
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 break_loop = True
                 break
-            clean_up(
-                    unscraped_links_filename, links, done_links_filename, 
-                    done_links)
-        clean_up(unscraped_links_filename, links, done_links_filename, 
-                done_links)
 
 def clean_up(unscraped_links_filename, links, done_links_filename, done_links):
     """Clean up after exception."""
-    print('''Links now in "{}": {}'''.
-          format(done_links_filename, len(done_links)))
+#    print('''    Links now in "{}": {}'''.
+#          format(done_links_filename, len(done_links)))
     with open(unscraped_links_filename, 'w') as f:
         f.write('\n'.join(links))
     with open(done_links_filename, 'w') as f:
         f.write('\n'.join(done_links))
 
-
-def scrape_links(links, done_links):
-    start_time = time.time()
-    while links and time.time() - start_time < 10:
-        title = links.pop()
-        # Ignore if title already done.
-        if title in done_links:
-            continue
-        page, title, synonyms, new_links = S.main(title)
-        links.update(set(new_links))
-        if title in links:
-            links.remove(title)
-        print('Time: {}; Links left: {}; synonyms: {}; new links: {}; {}'.
-                format(int(time.time() - start_time), len(links), 
-                       len(synonyms), len(new_links), title))
-        # Uncomment the following line to save whole pages (compressed).
-        # _ = U.store_data(page, title, target_dir='html_new', tar=True)
-        if synonyms:
-            _ = U.store_data(
-                    json.dumps(synonyms).encode(), title, 
-                    target_dir='synonyms_new', tar=False)
-        # Update done_links.
-        done_links.add(title)
+def scrape_links(
+        links, done_links, unscraped_links_filename, done_links_filename, 
+        start_time):
+    with open(unscraped_links_filename, 'w') as f, open(done_links_filename, 'w') as g:
+        while links:
+            title = links.pop()
+            # Ignore if title already done.
+            if title in done_links:
+                continue
+            page, title, synonyms, new_links = S.main(title)
+            links.update(set(new_links))
+            if title in links:
+                links.remove(title)
+            print('Time: {}; Links left: {}; synonyms: {}; new links: {}; {}'.
+                    format(int(time.time() - start_time), len(links), 
+                           len(synonyms), len(new_links), title))
+            # Uncomment the following line to save whole pages (compressed).
+            # _ = U.store_data(page, title, target_dir='html_new', tar=True)
+            if synonyms:
+                _ = U.store_data(
+                        json.dumps(synonyms).encode(), title, 
+                        target_dir='synonyms_new', tar=False)
+            # Update done_links.
+            done_links.add(title)
+            f.write('\n'.join(links))
+            g.write('\n'.join(done_links))
         time.sleep(2)
     return links, done_links
 
