@@ -42,7 +42,7 @@ def fetch_page_html(title):
         page = b''
     return page
 
-def get_synonyms(page):
+def get_synonyms(page, title):
     """Return list of dictionaries: words in tags marked data-noteta-code."""
     # We want to see any errors, so parser recover = False.
     parser = lxml.etree.HTMLParser(recover=True)
@@ -82,6 +82,13 @@ def get_synonyms(page):
                         # "大陆、台湾：特斯拉；香港：忒斯拉；"
                         # "zh-sg:简讯:", "zh-sg:面子书:"
                         print('Error:\n    {}\n    {}'.format(e, pair))
+                        # Keep a record of these
+                        with open(os.path.join('..', 'data', 'malformed.txt', 
+                                'r')) as f:
+                            content = f.read()
+                        with open(os.path.join('..', 'data', 'malformed.txt', 
+                                'w')) as f:
+                            f.write(content + '\n' + pair)
                         continue
                     d[k] = v
             results.append(d)
@@ -122,6 +129,6 @@ def get_links(page):
 def main(title):
     page = fetch_page_html(title)
     if page:
-        synonyms = get_synonyms(page)
         links, title = get_links(page)
+        synonyms = get_synonyms(page, title)
         return page, title, synonyms, links
