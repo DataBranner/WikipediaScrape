@@ -14,6 +14,7 @@ import lxml.etree
 import utils as U
 import string
 import urllib.parse as P
+import os
 
 def compose_api_req(title):
     return ('''http://zh.wikipedia.org/w/api.php?''' +
