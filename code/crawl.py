@@ -16,7 +16,7 @@ import json
 def main():
     while True:
         try:
-            scrape_links(title=None)
+            scrape_links()
         except KeyboardInterrupt:
             print('''\nWe had KeyboardInterrupt in main(). ''')
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -60,6 +60,8 @@ def get_done_links(done_links_filename):
 
 def update_links(links, new_links, done_links, title):
     """Update the various sets of links."""
+    if title in links:
+        links.remove(title)
     new_links -= set([title])
     new_links = new_links.difference(links)
     new_links = new_links.difference(done_links)
@@ -69,61 +71,62 @@ def update_links(links, new_links, done_links, title):
         done_links.add(title)
     return links, new_links, done_links
 
-def scrape_links(title=None,
+def scrape_links(title=None, links=None,
         unscraped_links_filename=os.path.join(
             '..', 'data', 'links', 'links_unscraped.txt'), 
         done_links_filename=os.path.join(
             '..', 'data', 'links', 'done_links.txt')):
     start_time = time.time()
-    links = get_unscraped_links(unscraped_links_filename)
+    if links == None:
+        links = get_unscraped_links(unscraped_links_filename)
     done_links = get_done_links(done_links_filename)
     syn_count = len(os.listdir(os.path.join('..', 'data', 'synonyms_new')))
     print('Found {} synonym-files at start of while-loop.\n'.format(syn_count))
-    with open(unscraped_links_filename, 'a') as f, open(done_links_filename, 'a') as g:
-        while links:
-            title = links.pop()
-            # Ignore if title already done.
-            if title in done_links:
-                continue
-            try:
-                page, title, synonyms, new_links = S.main(title)
-            except KeyboardInterrupt:
-                print('''\nWe met with KeyboardInterrupt; title: {}. '''.
-                        format(title))
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback.print_exception(exc_type, exc_value, exc_traceback)
-                break
-            except TypeError:
-                # TypeError: 'NoneType' object is not iterable
-                # Usually because "HTTP Error 404: Not Found", so restore title.
-                # But many of these are corrupt; do not restore for now.
+    while links:
+        title = links.pop()
+        # Ignore if title already done.
+        if title in done_links:
+            continue
+        try:
+            page, title, synonyms, new_links = S.main(title)
+        except KeyboardInterrupt:
+            print('''\nWe met with KeyboardInterrupt; title: {}. '''.
+                    format(title))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback)
+            break
+        except TypeError:
+            # TypeError: 'NoneType' object is not iterable
+            # Usually because "HTTP Error 404: Not Found", so restore title.
+            # But many of these are corrupt; do not restore for now.
 #                links.add(title)
-                print('    {}'.format(title))
-                continue
-            except Exception:
-                print('\nWe met with Exception; title: {}.'.
-                        format(title))
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback.print_exception(exc_type, exc_value, exc_traceback)
-                print('\n')
-                continue
-            if synonyms:
-                _ = U.store_data(
-                        json.dumps(synonyms).encode(), title, 
-                        target_dir='synonyms_new', tar=False)
-                syn_count += len(synonyms)
-            links, new_links, done_links = update_links(
-                    links, new_links, done_links, title)
-            print('T: {}; links: + {:>4} => {:>}; syn.: + {} => {}; {}'.
-                    format(int(time.time() - start_time), len(new_links), 
-                           len(links), len(synonyms), syn_count, title))
-            # Uncomment the following line to save whole pages (compressed).
-            # _ = U.store_data(page, title, target_dir='html_new', tar=True)
-            f.write('\n' + '\n'.join(new_links))
-            f.flush()
+            print('    {}'.format(title))
+            continue
+        except Exception:
+            print('\nWe met with Exception; title: {}.'.
+                    format(title))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback)
+            print('\n')
+            continue
+        if synonyms:
+            _ = U.store_data(
+                    json.dumps(synonyms).encode(), title, 
+                    target_dir='synonyms_new', tar=False)
+            syn_count += len(synonyms)
+        links, new_links, done_links = update_links(
+                links, new_links, done_links, title)
+        print('T: {}; links: + {:>4} => {:>}; syn.: + {} => {}; {}'.
+                format(int(time.time() - start_time), len(new_links), 
+                       len(links), len(synonyms), syn_count, title))
+        # Uncomment the following line to save whole pages (compressed).
+        # _ = U.store_data(page, title, target_dir='html_new', tar=True)
+        # Write the whole of "links": "title" removed, "new_links" added.
+        with open(unscraped_links_filename, 'w') as f:
+            f.write('\n'.join(links))
+        with open(done_links_filename, 'a') as g:
             g.write('\n' + title)
-            g.flush()
-            time.sleep(1.2)
+        time.sleep(1.2)
     return links, done_links
 
 if __name__ == '__main__':
