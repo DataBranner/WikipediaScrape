@@ -59,11 +59,13 @@ def get_done_links(done_links_filename):
     return done_links
 
 def update_links(links, new_links, done_links, title):
-    new_links -= set(title)
+    """Update the various sets of links."""
+    new_links -= set([title])
     new_links = new_links.difference(links).difference(done_links)
     links.update(new_links)
     # Update done_links.
-    done_links.add(title)
+    if title:
+        done_links.add(title)
     return links, new_links, done_links
 
 def scrape_links(title=None,
@@ -116,7 +118,7 @@ def scrape_links(title=None,
                            len(links), len(synonyms), syn_count, title))
             # Uncomment the following line to save whole pages (compressed).
             # _ = U.store_data(page, title, target_dir='html_new', tar=True)
-            f.write('n' + '\n'.join(new_links))
+            f.write('\n' + '\n'.join(new_links))
             f.flush()
             g.write('\n' + title)
             g.flush()
