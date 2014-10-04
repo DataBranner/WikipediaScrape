@@ -87,6 +87,8 @@ def scrape_links(title=None, links=None,
         # Ignore if title already done.
         if title in done_links:
             continue
+        with open(done_links_filename, 'a') as g:
+            g.write('\n' + title)
         try:
             page, title, synonyms, new_links = S.main(title)
         except KeyboardInterrupt:
@@ -113,20 +115,20 @@ def scrape_links(title=None, links=None,
             _ = U.store_data(
                     json.dumps(synonyms).encode(), title, 
                     target_dir='synonyms_new', tar=False)
-            syn_count += len(synonyms)
+            syn_count = len(
+                    os.listdir(os.path.join('..', 'data', 'synonyms_new')))
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
-        print('T: {}; links: + {:>4} => {:>}; syn.: + {} => {}; {}'.
+        print('T: {}; links: + {:>4} => {:>}; done: {}; syn.: + {} => {}; {}'.
                 format(int(time.time() - start_time), len(new_links), 
-                       len(links), len(synonyms), syn_count, title))
+                       len(links), len(done_links), len(synonyms), syn_count, 
+                       title))
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         # Write the whole of "links": "title" removed, "new_links" added.
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
-        with open(done_links_filename, 'a') as g:
-            g.write('\n' + title)
-        time.sleep(1.2)
+        time.sleep(1)
     return links, done_links
 
 if __name__ == '__main__':
