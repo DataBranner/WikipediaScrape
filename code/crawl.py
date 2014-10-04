@@ -120,16 +120,18 @@ def scrape_links(title=None, links=None,
                     os.listdir(os.path.join('..', 'data', 'synonyms_new')))
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
-        print('T: {}; links: + {:>3} => {:>}; done: {}; syn.: + {} => {}; {}'.
+        print('''T: {}; links: + {:>3} => {:>}; done: {}; '''
+              '''syn.: + {} => {} ({}%); {}'''.
                 format(int(time.time() - start_time), len(new_links), 
                        len(links), len(done_links), len(synonyms), syn_count, 
+                       round(100 * syn_count / len(done_links), 1), 
                        title))
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         # Write the whole of "links": "title" removed, "new_links" added.
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
-        time.sleep(1)
+        time.sleep(.5)
     return links, done_links
 
 if __name__ == '__main__':
