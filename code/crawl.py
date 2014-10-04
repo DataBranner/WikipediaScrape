@@ -86,11 +86,12 @@ def scrape_links(title=None, links=None,
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
+            print('title already in links:', title in links)
             continue
-        with open(done_links_filename, 'a') as g:
-            g.write('\n' + title)
+        with open(done_links_filename, 'a') as f:
+            f.write('\n' + title)
         try:
-            page, title, synonyms, new_links = S.main(title)
+            page, _, synonyms, new_links = S.main(title)
         except KeyboardInterrupt:
             print('''\nWe met with KeyboardInterrupt; title: {}. '''.
                     format(title))
@@ -119,7 +120,7 @@ def scrape_links(title=None, links=None,
                     os.listdir(os.path.join('..', 'data', 'synonyms_new')))
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
-        print('T: {}; links: + {:>4} => {:>}; done: {}; syn.: + {} => {}; {}'.
+        print('T: {}; links: + {:>3} => {:>}; done: {}; syn.: + {} => {}; {}'.
                 format(int(time.time() - start_time), len(new_links), 
                        len(links), len(done_links), len(synonyms), syn_count, 
                        title))
