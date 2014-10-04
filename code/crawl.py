@@ -61,7 +61,8 @@ def get_done_links(done_links_filename):
 def update_links(links, new_links, done_links, title):
     """Update the various sets of links."""
     new_links -= set([title])
-    new_links = new_links.difference(links).difference(done_links)
+    new_links = new_links.difference(links)
+    new_links = new_links.difference(done_links)
     links.update(new_links)
     # Update done_links.
     if title:
