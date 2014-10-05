@@ -124,7 +124,8 @@ def scrape_links(title=None, links=None,
               '''syn.: + {} => {} ({}%); {}'''.
                 format(int(time.time() - start_time), len(new_links), 
                     len(links), len(done_links), 
-                    round(100 * len(done_links) / len(done_links + new_links), 
+                    round(
+                        100 * len(done_links) / len(done_links + new_links), 1), 
                     len(synonyms), syn_count, 
                     round(100 * syn_count / len(done_links), 1), 
                     title))
