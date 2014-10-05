@@ -123,18 +123,13 @@ def scrape_links(title=None, links=None,
                     os.listdir(os.path.join('..', 'data', 'synonyms_new')))
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
-        print('len(done_links):', len(done_links), 'len(new_links):', len(new_links))
-        print('len(done_links) + len(new_links):', len(done_links) + len(new_links))
-        print('len(done_links) / (len(done_links) + len(new_links)):', len(done_links) / (len(done_links) + len(new_links)))
-        print('100 * len(done_links) / (len(done_links) + len(new_links)):', 100 * len(done_links) / (len(done_links) + len(new_links)))
-        print('round(100 * len(done_links) / (len(done_links) + len(new_links)), 1):', round(100 * len(done_links) / (len(done_links) + len(new_links)), 1))
         print('''T: {}; links: + {:>3} => {:>}; done: {} ({}%); '''
               '''syn.: + {} => {} ({}%);\n    {}'''.
                 format(int(time.time() - start_time), len(new_links), 
                     len(links), len(done_links), 
                     round(
                         100 * len(done_links) / 
-                        (len(done_links) + len(new_links)), 1), 
+                        (len(done_links) + len(links)), 1), 
                     len(synonyms), syn_count, 
                     round(100 * syn_count / len(done_links), 1), 
                     title))
