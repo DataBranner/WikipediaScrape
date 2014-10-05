@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141004, works
+# 20141005, works
 
 """"""
 import utils as U
@@ -120,12 +120,14 @@ def scrape_links(title=None, links=None,
                     os.listdir(os.path.join('..', 'data', 'synonyms_new')))
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
-        print('''T: {}; links: + {:>3} => {:>}; done: {}; '''
+        print('''T: {}; links: + {:>3} => {:>}; done: {} ({}%); '''
               '''syn.: + {} => {} ({}%); {}'''.
                 format(int(time.time() - start_time), len(new_links), 
-                       len(links), len(done_links), len(synonyms), syn_count, 
-                       round(100 * syn_count / len(done_links), 1), 
-                       title))
+                    len(links), len(done_links), 
+                    round(100 * len(done_links) / len(done_links + new_links), 
+                    len(synonyms), syn_count, 
+                    round(100 * syn_count / len(done_links), 1), 
+                    title))
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         # Write the whole of "links": "title" removed, "new_links" added.
