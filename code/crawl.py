@@ -30,6 +30,9 @@ def get_unscraped_links(unscraped_links_filename):
     links = links.split('\n')
     print('Retrieved {} unscraped links from {}'.
             format(len(links), unscraped_links_filename))
+    if input('Proceed? (require "yes")') != 'yes':
+        print('Exiting.')
+        sys.exit()
     # If empty, collect newest links (ignore other matter). 
     #     http://en.wikipedia.org/wiki/Special:RecentChanges
     if links == ['']:
@@ -46,8 +49,6 @@ def get_unscraped_links(unscraped_links_filename):
     links = set(links)
     if '' in links:
         links.remove('')
-    print(len(links))
-    sys.exit()
     return links
 
 def get_done_links(done_links_filename):
