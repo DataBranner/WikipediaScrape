@@ -40,12 +40,14 @@ def get_unscraped_links(unscraped_links_filename):
                 format(len(links)))
     # If these have been done already, get random link.
     #     https://zh.wikipedia.org/wiki/Special:Random
-    if not links:
+    if links == ['']:
         links = ['Special:Random']
         print('Turning to "Special:Random".')
     links = set(links)
     if '' in links:
         links.remove('')
+    print(len(links))
+    sys.exit()
     return links
 
 def get_done_links(done_links_filename):
