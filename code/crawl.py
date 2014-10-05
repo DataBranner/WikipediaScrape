@@ -131,7 +131,7 @@ def scrape_links(title=None, links=None,
         # Write the whole of "links": "title" removed, "new_links" added.
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
-        time.sleep(.5)
+#        time.sleep(.5)
     return links, done_links
 
 if __name__ == '__main__':
