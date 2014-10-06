@@ -116,6 +116,7 @@ def get_links(page):
                 'Help:' not in url and
                 'Portal:' not in url and
                 'Wikipedia:' not in url and 
+                'File:' not in url and
                 'User:' not in url and
                 'Template:' not in url and
                 'Wikipedia_talk:' not in url and
