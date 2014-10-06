@@ -30,6 +30,9 @@ def main():
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
             f.write('\n'.join(done_links))
+        if input('Proceed? (require "yes"): ') != 'yes':
+            print('Exiting.')
+            sys.exit()
     
 
 def get_unscraped_links(unscraped_links_filename):
