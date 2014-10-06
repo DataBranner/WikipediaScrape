@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141006, works
+# 20141006
 
 """"""
 import utils as U
@@ -14,10 +14,10 @@ import sys
 import json
 
 def main():
-    unscraped_links_filename=os.path.join(
-            '..', 'data', 'links', 'links_unscraped.txt'), 
-    done_links_filename=os.path.join(
-            '..', 'data', 'links', 'done_links.txt')):
+    unscraped_links_filename = os.path.join(
+            '..', 'data', 'links', 'links_unscraped.txt')
+    done_links_filename = os.path.join(
+            '..', 'data', 'links', 'done_links.txt')
     while True:
         try:
             links, done_links = scrape_links()
