@@ -30,7 +30,7 @@ def get_unscraped_links(unscraped_links_filename):
     links = links.split('\n')
     print('Retrieved {} unscraped links from {}'.
             format(len(links), unscraped_links_filename))
-    if input('Proceed? (require "yes")') != 'yes':
+    if input('Proceed? (require "yes"): ') != 'yes':
         print('Exiting.')
         sys.exit()
     # If empty, collect newest links (ignore other matter). 
