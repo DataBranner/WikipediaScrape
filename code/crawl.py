@@ -105,7 +105,10 @@ def scrape_links(title=None, links=None,
             # TypeError: 'NoneType' object is not iterable
             # Usually because "HTTP Error 404: Not Found", so restore title.
             links.add(title)
-            done_links.remove(title)
+            try:
+                done_links.remove(title)
+            except KeyError:
+                pass
             print('    {}'.format(title))
             continue
         except Exception:
