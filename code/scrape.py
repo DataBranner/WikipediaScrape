@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # scrape.py
 # David Prager Branner
-# 20141002, works
+# 20141006, works
 
 """Given a Chinese Wikipedia page-title, return its links and synonyms."""
 
@@ -119,9 +119,10 @@ def get_links(page):
                 'File:' not in url and
                 'User:' not in url and
                 'Template:' not in url and
+                'Wikipedia talk:' not in url and
                 'Wikipedia_talk:' not in url and
-                'User_talk:' not in url and
                 'User talk:' not in url and
+                'User_talk:' not in url and
                 'Category talk:' not in url and
                 'Category_talk:' not in url and
                 'Template talk:' not in url and

@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141005, works
+# 20141006, works
 
 """"""
 import utils as U
@@ -14,14 +14,23 @@ import sys
 import json
 
 def main():
+    unscraped_links_filename=os.path.join(
+            '..', 'data', 'links', 'links_unscraped.txt'), 
+    done_links_filename=os.path.join(
+            '..', 'data', 'links', 'done_links.txt')):
     while True:
         try:
-            scrape_links()
+            links, done_links = scrape_links()
         except KeyboardInterrupt:
             print('''\nWe had KeyboardInterrupt in main(). ''')
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback)
             break
+        with open(unscraped_links_filename, 'w') as f:
+            f.write('\n'.join(links))
+        with open(done_links_filename, 'w') as f:
+            f.write('\n'.join(done_links))
+    
 
 def get_unscraped_links(unscraped_links_filename):
     # Get the collection of links. 
@@ -100,7 +109,7 @@ def scrape_links(title=None, links=None,
                     format(title))
             exc_type, exc_value, exc_traceback = sys.exc_info()
             traceback.print_exception(exc_type, exc_value, exc_traceback)
-            break
+            return links, done_links
         except TypeError:
             # TypeError: 'NoneType' object is not iterable
             # Usually because "HTTP Error 404: Not Found", so restore title.
