@@ -19,13 +19,7 @@ def main():
     done_links_filename = os.path.join(
             '..', 'data', 'links', 'done_links.txt')
     while True:
-        try:
-            links, done_links = scrape_links()
-        except KeyboardInterrupt:
-            print('''\nWe had KeyboardInterrupt in main(). ''')
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            traceback.print_exception(exc_type, exc_value, exc_traceback)
-            break
+        links, done_links = scrape_links()
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
@@ -33,7 +27,6 @@ def main():
         if input('Proceed? (require "yes"): ') != 'yes':
             print('Exiting.')
             sys.exit()
-    
 
 def get_unscraped_links(unscraped_links_filename):
     # Get the collection of links. 
