@@ -3,7 +3,8 @@
 # David Prager Branner
 # 20141012
 
-""""""
+"""Crawl the Chinese subdomain of Wikipedia; collect links and synonym data."""
+
 import utils as U
 import scrape as S
 import os
@@ -22,7 +23,7 @@ def main():
         if input('Proceed? (require "yes"): ') != 'yes':
             print('Exiting.')
             break
-        links, done_links = scrape_links()
+        links, done_links = scrape_links(time_before_new_changed=60)
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
