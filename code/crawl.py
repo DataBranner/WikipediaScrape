@@ -84,12 +84,11 @@ def update_links(links, new_links, done_links, title):
         done_links.add(title)
     return links, new_links, done_links
 
-def scrape_links(title=None, links=None,
+def scrape_links(time_before_new_changed, title=None, links=None,
         unscraped_links_filename=os.path.join(
             '..', 'data', 'links', 'links_unscraped.txt'), 
         done_links_filename=os.path.join(
-            '..', 'data', 'links', 'done_links.txt'),
-        time_before_new_changed):
+            '..', 'data', 'links', 'done_links.txt')):
     start_time = time.time()
     if links == None:
         links = get_unscraped_links(unscraped_links_filename)
