@@ -55,13 +55,14 @@ def get_unscraped_links(unscraped_links_filename, done_links):
 
 def get_recent_changes(links, done_links):
     _, _, _, recent_links = S.main('Special:RecentChanges')
-    starting_links_num = len(links)
+    starting_recent_links_num = len(recent_links)
     recent_links = recent_links.difference(done_links)
     recent_links = recent_links.difference(links)
     links.update(recent_links)
-    new_links_num = len(links)
+    new_recent_links_num = len(recent_links)
     print('Retrieved {} links from "Special:RecentChanges"; {} of which new.'.
-            format(len(recent_links), new_links_num-starting_links_num))
+            format(len(recent_links), 
+                   new_recent_links_num - starting_recent_links_num))
     return links
 
 def get_done_links(done_links_filename):
