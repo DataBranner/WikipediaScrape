@@ -14,7 +14,7 @@ import traceback
 import sys
 import json
 
-def main():
+def main(time_before_new_changed=300):
     unscraped_links_filename = os.path.join(
             '..', 'data', 'links', 'links_unscraped.txt')
     done_links_filename = os.path.join(
@@ -23,7 +23,7 @@ def main():
         if input('Proceed? (require "yes"): ') != 'yes':
             print('Exiting.')
             break
-        links, done_links = scrape_links(time_before_new_changed=60)
+        links, done_links = scrape_links(time_before_new_changed)
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
