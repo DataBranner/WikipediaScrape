@@ -33,23 +33,22 @@ def get_unscraped_links(unscraped_links_filename):
     # Get the collection of links. 
     with open(unscraped_links_filename, 'r') as f:
         links = f.read()
-    links = links.split('\n')
+    links = set(links.split('\n'))
     print('Retrieved {} unscraped links from {}'.
             format(len(links), unscraped_links_filename))
     # If empty, collect newest links (ignore other matter). 
     #     http://en.wikipedia.org/wiki/Special:RecentChanges
-    if links == ['']:
+    if links == set():
         print('No links found in file\n    {}'.
                 format(unscraped_links_filename))
-        _, _, _, links = S.main('Special:RecentChanges')
+        links = get_recent_changes(links)
         print('Retrieved {} links from "Special:RecentChanges".'.
                 format(len(links)))
     # If these have all been done already, get random link.
     #     https://zh.wikipedia.org/wiki/Special:Random
-    if links == ['']:
-        links = ['Special:Random']
+    if links == set():
+        links = {'Special:Random'}
         print('Turning to "Special:Random".')
-    links = set(links)
     if '' in links:
         links.remove('')
     return links
@@ -90,7 +89,7 @@ def scrape_links(title=None, links=None,
             '..', 'data', 'links', 'links_unscraped.txt'), 
         done_links_filename=os.path.join(
             '..', 'data', 'links', 'done_links.txt'),
-        time_before_new_changed=60):
+        time_before_new_changed):
     start_time = time.time()
     if links == None:
         links = get_unscraped_links(unscraped_links_filename)
