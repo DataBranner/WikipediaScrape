@@ -29,7 +29,7 @@ def main(time_before_new_changed=300):
         with open(done_links_filename, 'w') as f:
             f.write('\n'.join(done_links))
 
-def get_unscraped_links(unscraped_links_filename):
+def get_unscraped_links(unscraped_links_filename, done_links):
     # Get the collection of links. 
     with open(unscraped_links_filename, 'r') as f:
         links = f.read()
@@ -41,7 +41,7 @@ def get_unscraped_links(unscraped_links_filename):
     if links == set():
         print('No links found in file\n    {}'.
                 format(unscraped_links_filename))
-        links = get_recent_changes(links)
+        links = get_recent_changes(links, done_links)
         print('Retrieved {} links from "Special:RecentChanges".'.
                 format(len(links)))
     # If these have all been done already, get random link.
@@ -53,9 +53,11 @@ def get_unscraped_links(unscraped_links_filename):
         links.remove('')
     return links
 
-def get_recent_changes(links):
+def get_recent_changes(links, done_links):
     _, _, _, recent_links = S.main('Special:RecentChanges')
     starting_links_num = len(links)
+    recent_links = recent_links.difference(done_links)
+    recent_links = recent_links.difference(links)
     links.update(recent_links)
     new_links_num = len(links)
     print('Retrieved {} links from "Special:RecentChanges"; {} of which new.'.
@@ -90,18 +92,17 @@ def scrape_links(time_before_new_changed, title=None, links=None,
         done_links_filename=os.path.join(
             '..', 'data', 'links', 'done_links.txt')):
     start_time = time.time()
-    if links == None:
-        links = get_unscraped_links(unscraped_links_filename)
     done_links = get_done_links(done_links_filename)
+    if links == None:
+        links = get_unscraped_links(unscraped_links_filename, done_links)
     syn_count = len(os.listdir(os.path.join('..', 'data', 'synonyms_new')))
     print('Found {} synonym-files at start of while-loop.\n'.format(syn_count))
     while links:
         if time.time() > start_time + time_before_new_changed:
             print('Time {} seconds exceeded; getting new changed links.'.
                     format(time_before_new_changed))
-            links = get_recent_changes(links)
+            links = get_recent_changes(links, done_links)
             start_time = time.time()
-#            return links, done_links
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
@@ -143,7 +144,7 @@ def scrape_links(time_before_new_changed, title=None, links=None,
         links, new_links, done_links = update_links(
                 links, new_links, done_links, title)
         print('''T: {}; links: + {:>3} => {:>}; done: {} ({}%); '''
-              '''syn.: + {} => {} ({}%);\n    {}'''.
+              '''syn: + {} => {} ({}%);\n    {}'''.
                 format(int(time.time() - start_time), len(new_links), 
                     len(links), len(done_links), 
                     round(
