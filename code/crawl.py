@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141006
+# 20141012
 
 """"""
 import utils as U
@@ -19,14 +19,14 @@ def main():
     done_links_filename = os.path.join(
             '..', 'data', 'links', 'done_links.txt')
     while True:
+        if input('Proceed? (require "yes"): ') != 'yes':
+            print('Exiting.')
+            break
         links, done_links = scrape_links()
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
             f.write('\n'.join(done_links))
-        if input('Proceed? (require "yes"): ') != 'yes':
-            print('Exiting.')
-            sys.exit()
 
 def get_unscraped_links(unscraped_links_filename):
     # Get the collection of links. 
@@ -35,9 +35,6 @@ def get_unscraped_links(unscraped_links_filename):
     links = links.split('\n')
     print('Retrieved {} unscraped links from {}'.
             format(len(links), unscraped_links_filename))
-    if input('Proceed? (require "yes"): ') != 'yes':
-        print('Exiting.')
-        sys.exit()
     # If empty, collect newest links (ignore other matter). 
     #     http://en.wikipedia.org/wiki/Special:RecentChanges
     if links == ['']:
@@ -46,7 +43,7 @@ def get_unscraped_links(unscraped_links_filename):
         _, _, _, links = S.main('Special:RecentChanges')
         print('Retrieved {} links from "Special:RecentChanges".'.
                 format(len(links)))
-    # If these have been done already, get random link.
+    # If these have all been done already, get random link.
     #     https://zh.wikipedia.org/wiki/Special:Random
     if links == ['']:
         links = ['Special:Random']
@@ -54,6 +51,13 @@ def get_unscraped_links(unscraped_links_filename):
     links = set(links)
     if '' in links:
         links.remove('')
+    return links
+
+def get_recent_changes(links):
+    _, _, _, recent_links = S.main('Special:RecentChanges')
+    print('Retrieved {} links from "Special:RecentChanges".'.
+            format(len(recent_links)))
+    links.update(recent_links)
     return links
 
 def get_done_links(done_links_filename):
@@ -68,9 +72,8 @@ def get_done_links(done_links_filename):
 
 def update_links(links, new_links, done_links, title):
     """Update the various sets of links."""
-    if title in links:
-        links.remove(title)
-    new_links -= set([title])
+    links.discard(title)
+    new_links.discard(title)
     new_links = new_links.difference(links)
     new_links = new_links.difference(done_links)
     links.update(new_links)
@@ -83,7 +86,8 @@ def scrape_links(title=None, links=None,
         unscraped_links_filename=os.path.join(
             '..', 'data', 'links', 'links_unscraped.txt'), 
         done_links_filename=os.path.join(
-            '..', 'data', 'links', 'done_links.txt')):
+            '..', 'data', 'links', 'done_links.txt'),
+        time_before_new_changed=60):
     start_time = time.time()
     if links == None:
         links = get_unscraped_links(unscraped_links_filename)
@@ -91,10 +95,16 @@ def scrape_links(title=None, links=None,
     syn_count = len(os.listdir(os.path.join('..', 'data', 'synonyms_new')))
     print('Found {} synonym-files at start of while-loop.\n'.format(syn_count))
     while links:
+        if time.time() > start_time + time_before_new_changed:
+            print('Time {} seconds exceeded; getting new changed links.'.
+                    format(time_before_new_changed))
+            links = get_recent_changes(links)
+            start_time = time.time()
+#            return links, done_links
         title = links.pop()
         # Ignore if title already done.
         if title in done_links:
-            print('title already in links:', title in links)
+            print('title already in links:', title in done_links)
             continue
         with open(done_links_filename, 'a') as f:
             f.write('\n' + title)
@@ -144,8 +154,15 @@ def scrape_links(title=None, links=None,
         # Uncomment the following line to save whole pages (compressed).
         # _ = U.store_data(page, title, target_dir='html_new', tar=True)
         # Write the whole of "links": "title" removed, "new_links" added.
-        with open(unscraped_links_filename, 'w') as f:
-            f.write('\n'.join(links))
+        try:
+            with open(unscraped_links_filename, 'w') as f:
+                f.write('\n'.join(links))
+        except KeyboardInterrupt:
+            print('''\nWe met with KeyboardInterrupt; title: {}. '''.
+                    format(title))
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback)
+            return links, done_links
 #        time.sleep(.5)
     return links, done_links
 
