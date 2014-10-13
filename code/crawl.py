@@ -61,8 +61,8 @@ def get_recent_changes(links, done_links):
     links.update(recent_links)
     new_recent_links_num = len(recent_links)
     print('Retrieved {} links from "Special:RecentChanges"; {} of which new.'.
-            format(len(recent_links), 
-                   new_recent_links_num - starting_recent_links_num))
+            format(starting_recent_links_num, 
+                   starting_recent_links_num - new_recent_links_num))
     return links
 
 def get_done_links(done_links_filename):
