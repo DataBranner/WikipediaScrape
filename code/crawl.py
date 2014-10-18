@@ -35,9 +35,10 @@ def main(time_before_new_changed=300):
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
             f.write('\n'.join(done_links))
-        while time.time() < start_time + time_before_new_changed:
-            time.sleep(1)
-        print('Continuing main loop.')
+        # Sleep for any time left in loop.
+        while start_time + time_before_new_changed - time.time():
+            time.sleep(start_time + time_before_new_changed - time.time() + 1)
+        print('Now continuing main loop.')
 
 def get_unscraped_links(unscraped_links_filename, done_links):
     """Try three different means to get links to work with."""
