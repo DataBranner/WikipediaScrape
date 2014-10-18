@@ -1,0 +1,112 @@
+https://zh.wikipedia.org/wiki/%E9%BB%91%E5%AE%A2%E5%B8%9D%E5%9B%BD
+https://zh.wikipedia.org/wiki/%E9%BB%91%E5%AE%A2%E5%B8%9D%E5%9B%BD
+
+
+time difference between
+
+    bytes(title, 'utf-8')
+
+and
+
+    title.encode()
+
+python -m timeit -s """
+import random
+""" """
+sample = ''.join([chr(random.randint(256, 40000)) for i in range(1000)])
+sample.encode()
+"""
+
+python -m timeit -s """
+import random
+""" """
+sample = ''.join([chr(random.randint(256, 40000)) for i in range(1000)])
+bytes(sample, 'utf-8')
+"""
+
+import lxml
+parser = lxml.etree.HTMLParser()
+page = s.fetch_page_html(title)
+root = lxml.etree.parse(StringIO(page.decode()), parser)
+codes = root.xpath('//div[@data-noteta-code]')
+{k: v for code in codes 
+        for pairs in code.values()[-1].split(';') 
+        for k, v in pairs.split(':')}
+
+
+
+[code.values()[-1].split(';') for code in codes]
+
+ds = []
+for code in [code.values()[-1].split(';') for code in codes]:
+    d = {}
+    for pair in code:
+        print(pair.strip(' ').split(':'))
+
+
+
+ds = []
+for code in [code.values()[-1].split(';') for code in codes]:
+    d = {}
+    for pair in code:
+        if pair:
+            k, v = pair.strip(' ').split(':')
+            d[k] = v
+    ds.append(d)
+
+
+
+[[pair.strip() for pair in pairs if pair] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+[[{pair.strip():0 for pair in pairs if pair}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+[[{k: v for pair in pairs if pair for k, v in pair.strip().split(':')}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+
+
+
+[[{item:item for pair in pairs if pair for item in pair.split(':')}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+[[{item:item for pair in pairs if pair for k, v in pair.split(':')}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+
+[[{k: v for pair in pairs if pair for item in pair.split(':') for k, v in item}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+
+[[{k: v for pair in pairs if pair for k, v in pair.strip()}] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+
+[item for item in [[pair.strip() for pair in pairs if pair] for pairs in [code.values()[-1].split(';') for code in codes]]]
+
+[item for item in [[pair.strip() for pair in pairs if pair] for pairs in [code.values()[-1].split(';') for code in codes]]]
+
+
+
+[[{k: v for item in [[pair.strip() for pair in pairs if pair] 
+        for pairs in [code.values()[-1].split(';') 
+        for code in codes]] for k, v in item.split(':')}]]
+
+
+
+
+
+[[pair for pair in pairs if pair] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+
+[{k: v for pair in pairs if pair for k, v in pair.split(':')} for pairs in [code.values()[-1].split(';') for code in codes]]
+
+[[pair] for pair in pairs] for pairs in [code.values()[-1].split(';') for code in codes]]
+
+[{k:v for pair in pairs 
+        for k, v in pair.split(':') if len(pairs)} 
+            for pairs in [code.values()[-1].split(';') 
+            for code in codes]]
+
+
+[pairs.strip() for code in codes 
+        for pairs in code.values()[-1].split(';') if pairs]
+
+
+[k for code in codes 
+        for pairs in code.values()[-1].split(';')
+        for k in pairs.strip(' ').split(':')]

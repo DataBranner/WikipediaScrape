@@ -1,3 +1,0 @@
-*.blur filter=git-blur diff=git-blur
-*.txt filter=git-blur diff=git-blur
-
