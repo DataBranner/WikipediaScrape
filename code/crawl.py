@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141012
+# 20141018
 
-"""Crawl the Chinese subdomain of Wikipedia; collect links and synonym data."""
+"""Crawl the Chinese subdomain of Wikipedia; collect links, synonym metadata."""
 
 import utils as U
 import scrape as S
@@ -15,21 +15,31 @@ import sys
 import json
 
 def main(time_before_new_changed=300):
+    """Maintain a timed but endless loop that runs the main scraping program."""
     unscraped_links_filename = os.path.join(
             '..', 'data', 'links', 'links_unscraped.txt')
     done_links_filename = os.path.join(
             '..', 'data', 'links', 'done_links.txt')
     while True:
+        # Use back-up timer here. Function scrape_links() has its own, but we 
+        # need one here lest too few new links are available when we scrape and
+        # we end up scraping Special:RecentChanges too often. The same 
+        # timing is used here as in scrape_links().
+        start_time = time.time()
         if input('Proceed? (require "yes"): ') != 'yes':
             print('Exiting.')
             break
         links, done_links = scrape_links(time_before_new_changed)
+        # We always save the current scraped and unscraped links now.
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
         with open(done_links_filename, 'w') as f:
             f.write('\n'.join(done_links))
+        while time.time() < start_time + time_before_new_changed:
+            time.sleep(1)
 
 def get_unscraped_links(unscraped_links_filename, done_links):
+    """Try three different means to get links to work with."""
     # Get the collection of links. 
     with open(unscraped_links_filename, 'r') as f:
         links = f.read()
@@ -54,6 +64,7 @@ def get_unscraped_links(unscraped_links_filename, done_links):
     return links
 
 def get_recent_changes(links, done_links):
+    """Scrape links on the Special:RecentChanges page."""
     _, _, _, recent_links = S.main('Special:RecentChanges')
     starting_recent_links_num = len(recent_links)
     recent_links = recent_links.difference(done_links)
@@ -65,6 +76,7 @@ def get_recent_changes(links, done_links):
     return links
 
 def get_done_links(done_links_filename):
+    """Retrieve the list of links already scraped."""
     with open(done_links_filename, 'r') as f:
         done_links = f.read()
     done_links = set(done_links.split('\n'))
@@ -91,6 +103,7 @@ def scrape_links(time_before_new_changed, title=None, links=None,
             '..', 'data', 'links', 'links_unscraped.txt'), 
         done_links_filename=os.path.join(
             '..', 'data', 'links', 'done_links.txt')):
+    """Scrape links from pages on candidate URLs and retrieve any synonyms."""
     start_time = time.time()
     done_links = get_done_links(done_links_filename)
     if links == None:
