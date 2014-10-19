@@ -6,7 +6,9 @@
 """Crawl the Chinese subdomain of Wikipedia; collect links, synonym metadata."""
 
 # To-do: Links containing "redlink=1" link to pages that do not yet exist. 
-# Are they being scraped?
+# Are we sure they are not being scraped?
+
+# In future, on "HTTP Error 404" we should perhaps discard the link instead of tossing it back for future use.
 
 import utils as U
 import scrape as S
@@ -139,7 +141,9 @@ def scrape_links(time_before_new_changed, title=None, links=None,
         except TypeError:
             # TypeError: 'NoneType' object is not iterable
             # Usually because "HTTP Error 404: Not Found", so restore title.
-            links.add(title)
+            # But temporarily we are leaving titles unrestored, as we think
+            # some of these were previously unfiltered `redlink=1" cases.
+#            links.add(title)
             try:
                 done_links.remove(title)
             except KeyError:
