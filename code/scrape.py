@@ -105,18 +105,24 @@ def get_links(page):
     parser = lxml.etree.HTMLParser(recover=True)
     root = lxml.etree.parse(io.BytesIO(page), parser)
     if root:
-        urls, title = get_title(root, '//a/@href')
+        urls = get_urls(root)
+        title = get_title(root)
     if urls:
         urls = clean_urls(urls)
     return set(urls), title
 
+def get_urls(root):
+    """Get all URLs in <a href...> elements."""
+    return root.xpath('//a/@href')
+
 def get_title(root, xpath):
-    urls = root.xpath(xpath)
+    """Get title of this page from page itself."""
     title = root.xpath('//title')[0].text
     title = title.replace(' - 维基百科，自由的百科全书', '')
-    return urls, title
+    return title
 
 def clean_urls(urls):
+    """Remove undesirable URLs and clean further."""
     urls = [re.sub('[&#].+$', r'', url) for url in urls if
             url.find('action=') == -1 and
             re.search('^/wiki/', url) and
