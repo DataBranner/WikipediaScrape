@@ -105,10 +105,10 @@ def get_links(page):
         title = title.replace(' - 维基百科，自由的百科全书', '')
     if urls:
         urls = [re.sub('[&#].+$', r'', url) for url in urls if
-                item.find('action=') == -1 and
-               re.search('^/wiki/', url) and
-               not re.search('\....$', url) and
-               'redlink=1' not in url]
+                url.find('action=') == -1 and
+                re.search('^/wiki/', url) and
+                not re.search('\....$', url) and
+                'redlink=1' not in url]
         urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
         urls = [url for url in urls if 
                 '/' not in url and 
