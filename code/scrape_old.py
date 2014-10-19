@@ -1,11 +1,9 @@
 #! /usr/bin/env python
 # scrape.py
 # David Prager Branner
-# 20141019
+# 20141019, works
 
 """Given a Chinese Wikipedia page-title, return its links and synonyms."""
-
-# More modularized than scrape_old.py and ready to have interlanguage routine added.
 
 import urllib
 import sys
@@ -97,52 +95,41 @@ def get_synonyms(page, title):
             results.append(d)
     return results
 
-def get_interwiki(interwiki='interlanguage-link interwiki-en'):
-    pass
-
 def get_links(page):
     """Return list of all links on page."""
     parser = lxml.etree.HTMLParser(recover=True)
     root = lxml.etree.parse(io.BytesIO(page), parser)
     if root:
-        urls, title = get_title(root, '//a/@href')
+        urls = root.xpath('//a/@href')
+        title = root.xpath('//title')[0].text
+        title = title.replace(' - 维基百科，自由的百科全书', '')
     if urls:
-        urls = clean_urls(urls)
+        urls = [re.sub('[&#].+$', r'', url) for url in urls if
+                url.find('action=') == -1 and
+                re.search('^/wiki/', url) and
+                not re.search('\....$', url) and
+                'redlink=1' not in url]
+        urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
+        urls = [url for url in urls if 
+                '/' not in url and 
+                'Special:' not in url and
+                'Project:' not in url and
+                'Help:' not in url and
+                'Portal:' not in url and
+                'Wikipedia:' not in url and 
+                'File:' not in url and
+                'User:' not in url and
+                'Template:' not in url and
+                'Wikipedia talk:' not in url and
+                'Wikipedia_talk:' not in url and
+                'User talk:' not in url and
+                'User_talk:' not in url and
+                'Category talk:' not in url and
+                'Category_talk:' not in url and
+                'Template talk:' not in url and
+                'Template_talk:' not in url and
+                'Talk:' not in url]
     return set(urls), title
-
-def get_title(root, xpath):
-    urls = root.xpath(xpath)
-    title = root.xpath('//title')[0].text
-    title = title.replace(' - 维基百科，自由的百科全书', '')
-    return urls, title
-
-def clean_urls(urls):
-    urls = [re.sub('[&#].+$', r'', url) for url in urls if
-            url.find('action=') == -1 and
-            re.search('^/wiki/', url) and
-            not re.search('\....$', url) and
-            'redlink=1' not in url]
-    urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
-    urls = [url for url in urls if 
-            '/' not in url and 
-            'Special:' not in url and
-            'Project:' not in url and
-            'Help:' not in url and
-            'Portal:' not in url and
-            'Wikipedia:' not in url and 
-            'File:' not in url and
-            'User:' not in url and
-            'Template:' not in url and
-            'Wikipedia talk:' not in url and
-            'Wikipedia_talk:' not in url and
-            'User talk:' not in url and
-            'User_talk:' not in url and
-            'Category talk:' not in url and
-            'Category_talk:' not in url and
-            'Template talk:' not in url and
-            'Template_talk:' not in url and
-            'Talk:' not in url]
-    return urls
 
 def main(title):
     page = fetch_page_html(title)
