@@ -104,10 +104,11 @@ def get_links(page):
         title = root.xpath('//title')[0].text
         title = title.replace(' - 维基百科，自由的百科全书', '')
     if urls:
-        urls = [re.sub('[&#].+$', r'', item) for item in urls if
+        urls = [re.sub('[&#].+$', r'', url) for url in urls if
                 item.find('action=') == -1 and
-               re.search('^/wiki/', item) and
-               not re.search('\....$', item)]
+               re.search('^/wiki/', url) and
+               not re.search('\....$', url) and
+               'redlink=1' not in url]
         urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
         urls = [url for url in urls if 
                 '/' not in url and 
@@ -127,8 +128,7 @@ def get_links(page):
                 'Category_talk:' not in url and
                 'Template talk:' not in url and
                 'Template_talk:' not in url and
-                'Talk:' not in url and
-                'redlink=1' not in url]
+                'Talk:' not in url]
     return set(urls), title
 
 def main(title):
