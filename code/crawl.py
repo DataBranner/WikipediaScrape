@@ -1,9 +1,12 @@
 #! /usr/bin/env python
 # crawl.py
 # David Prager Branner
-# 20141018
+# 20141019
 
 """Crawl the Chinese subdomain of Wikipedia; collect links, synonym metadata."""
+
+# To-do: Links containing "redlink=1" link to pages that do not yet exist. 
+# Are they being scraped?
 
 import utils as U
 import scrape as S
