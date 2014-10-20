@@ -47,15 +47,9 @@ def main(time_before_new_changed=300):
         print('Links saved in main loop.')
         while time.time() < start_time + time_before_new_changed:
             time.sleep(1)
+        link = get_recent_changes(links, done_links)
         links = get_random_link(links)
         print('Continuing main loop.')
-
-def get_random_link(links)
-    # Source: https://zh.wikipedia.org/wiki/Special:Random
-    if links == set():
-        links = {'Special:Random'}
-        print('Turning to "Special:Random".')
-    return links
 
 def get_unscraped_links(unscraped_links_filename, done_links):
     """Try three different means to get links to work with."""
@@ -89,6 +83,13 @@ def get_recent_changes(links, done_links):
     len(recent_links)
     print('Retrieved {} links from "Special:RecentChanges"; {} of which new.'.
             format(starting_recent_links_num, len(recent_links)))
+    return links
+
+def get_random_link(links):
+    # Source: https://zh.wikipedia.org/wiki/Special:Random
+    if links == set():
+        links = {'Special:Random'}
+        print('Turning to "Special:Random".')
     return links
 
 def get_done_links(done_links_filename):
