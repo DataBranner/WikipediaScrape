@@ -134,7 +134,7 @@ def clean_urls(urls):
             not re.search('\....$', url) and
             'redlink=1' not in url]
     # Since all links are relative, delete initial /wiki/.
-    urls = [url.replace('/wiki/', '')) 
+    urls = [url.replace('/wiki/', '')
             for url in urls 
             if url and
             '/' not in url and 
