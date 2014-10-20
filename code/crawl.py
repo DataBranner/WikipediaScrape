@@ -109,6 +109,8 @@ def update_links(links, new_links, done_links, title):
     """Update the various sets of links."""
     links.discard(title)
     new_links.discard(title)
+    # Revise new_links against links and done_links, but
+    # do not revise links against done_links, lest "RecentChanges" be removed.
     new_links = new_links.difference(links)
     new_links = new_links.difference(done_links)
     links.update(new_links)
@@ -136,10 +138,6 @@ def scrape_links(time_before_new_changed, title=None, links=None,
             links = get_recent_changes(links, done_links)
             start_time = time.time()
         title = links.pop()
-        # Do not examine whether title in done_links; 
-        # would prevent utility of "get_recent_changes()".
-        with open(done_links_filename, 'a') as f:
-            f.write('\n' + title)
         try:
             page, _, synonyms, new_links = S.main(title)
         except KeyboardInterrupt:
@@ -167,6 +165,11 @@ def scrape_links(time_before_new_changed, title=None, links=None,
             traceback.print_exception(exc_type, exc_value, exc_traceback)
             print('\n')
             continue
+        # Do not examine whether title in done_links; 
+        # would prevent utility of "get_recent_changes()".
+        # Assume new links are checked only when received from S.main().
+        with open(done_links_filename, 'a') as f:
+            f.write('\n' + title)
         if synonyms:
             _ = U.store_data(
                     json.dumps(synonyms).encode(), title, 
