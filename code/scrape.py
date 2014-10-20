@@ -123,13 +123,20 @@ def get_title(root):
 
 def clean_urls(urls):
     """Remove undesireable URLs and clean further."""
+    # Features: 
+    #     url.find('action=') == -1:    Only links to content.
+    #     re.search('^/wiki/', url):    Only relative URLs on the Chinese site.
+    #     not re.search('\....$', url): Not files with three-char extensions.
+    #     'redlink=1' not in url:       Only links not now known not to exist.
     urls = [re.sub('[&#].+$', r'', url) for url in urls if
             url.find('action=') == -1 and
             re.search('^/wiki/', url) and
             not re.search('\....$', url) and
             'redlink=1' not in url]
-    urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
-    urls = [url for url in urls if 
+    # Since all links are relative, delete initial /wiki/; 
+    # also, eliminate most special pages (but not "Category:").
+    urls = [P.unquote(url.replace('/wiki/', '')) 
+            for url in urls if url and
             '/' not in url and 
             'Special:' not in url and
             'Project:' not in url and
