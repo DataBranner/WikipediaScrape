@@ -79,7 +79,7 @@ def get_recent_changes(links, done_links):
     """Scrape links on the Special:RecentChanges page."""
     _, _, _, recent_links = S.main('Special:RecentChanges')
     starting_recent_links_num = len(recent_links)
-    recent_links = recent_links.difference(done_links)
+#    recent_links = recent_links.difference(done_links) # Bad! What if updated?
     recent_links = recent_links.difference(links)
     links.update(recent_links)
     len(recent_links)
