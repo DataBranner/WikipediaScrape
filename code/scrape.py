@@ -107,6 +107,7 @@ def get_links(page):
     if root:
         urls = get_urls(root)
         title = get_title(root)
+        interwiki = get_interwiki()
     if urls:
         urls = clean_urls(urls)
     return set(urls), title
