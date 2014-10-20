@@ -115,14 +115,13 @@ def get_urls(root):
     """Get all URLs in <a href...> elements."""
     return root.xpath('//a/@href')
 
-def get_title(root, xpath):
+def get_title(root):
     """Get title of this page from page itself."""
     title = root.xpath('//title')[0].text
-    title = title.replace(' - 维基百科，自由的百科全书', '')
-    return title
+    return title.replace(' - 维基百科，自由的百科全书', '')
 
 def clean_urls(urls):
-    """Remove undesirable URLs and clean further."""
+    """Remove undesireable URLs and clean further."""
     urls = [re.sub('[&#].+$', r'', url) for url in urls if
             url.find('action=') == -1 and
             re.search('^/wiki/', url) and
