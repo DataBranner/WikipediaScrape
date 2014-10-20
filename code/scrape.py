@@ -133,10 +133,10 @@ def clean_urls(urls):
             re.search('^/wiki/', url) and
             not re.search('\....$', url) and
             'redlink=1' not in url]
-    # Since all links are relative, delete initial /wiki/; 
-    # also, eliminate most special pages (but not "Category:").
-    urls = [P.unquote(url.replace('/wiki/', '')) 
-            for url in urls if url and
+    # Since all links are relative, delete initial /wiki/.
+    urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
+    # QQQ Can the next section be merged with the last?
+    urls = [url for url in urls if 
             '/' not in url and 
             'Special:' not in url and
             'Project:' not in url and

@@ -136,10 +136,11 @@ def scrape_links(time_before_new_changed, title=None, links=None,
             links = get_recent_changes(links, done_links)
             start_time = time.time()
         title = links.pop()
-        # Ignore if title already done.
-        if title in done_links:
-            print('title already in links:', title in done_links)
-            continue
+        # The following will prevent utility of "get_recent_changes()".
+#        # Ignore if title already done.
+#        if title in done_links:
+#            print('title already in links:', title in done_links)
+#            continue
         with open(done_links_filename, 'a') as f:
             f.write('\n' + title)
         try:
