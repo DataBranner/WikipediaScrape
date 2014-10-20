@@ -8,11 +8,13 @@
 # To-do: Links containing "redlink=1" link to pages that do not yet exist. 
 # Are we sure they are not being scraped?
 
-# Do logging of errors
+# Do logging of errors.
 
 # Add all data to .gitignore — transfer by sftp.
 
 # Implement interlanguage links.
+
+# Should main loop's call of scrape_links be in try-block?
 
 import utils as U
 import scrape as S
