@@ -128,15 +128,15 @@ def clean_urls(urls):
     #     re.search('^/wiki/', url):    Only relative URLs on the Chinese site.
     #     not re.search('\....$', url): Not files with three-char extensions.
     #     'redlink=1' not in url:       Only links not now known not to exist.
-    urls = [re.sub('[&#].+$', r'', url) for url in urls if
+    urls = [P.unquote(re.sub('[&#].+$', r'', url)) for url in urls if
             url.find('action=') == -1 and
             re.search('^/wiki/', url) and
             not re.search('\....$', url) and
             'redlink=1' not in url]
     # Since all links are relative, delete initial /wiki/.
-    urls = [P.unquote(url.replace('/wiki/', '')) for url in urls if url]
-    # QQQ Can the next section be merged with the last?
-    urls = [url for url in urls if 
+    urls = [url.replace('/wiki/', '')) 
+            for url in urls 
+            if url and
             '/' not in url and 
             'Special:' not in url and
             'Project:' not in url and
