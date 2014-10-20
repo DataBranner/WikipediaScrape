@@ -197,7 +197,7 @@ def scrape_links(time_before_new_changed, title=None, links=None,
 #             exc_type, exc_value, exc_traceback = sys.exc_info()
 #             traceback.print_exception(exc_type, exc_value, exc_traceback)
 #             return links, done_links
-     return links, done_links
+    return links, done_links
 
 if __name__ == '__main__':
     main()
