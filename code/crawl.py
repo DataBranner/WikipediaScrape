@@ -49,7 +49,7 @@ def main(time_before_new_changed=300):
         print('Links saved in main loop.')
         while time.time() < start_time + time_before_new_changed:
             time.sleep(1)
-        link = get_recent_changes(links, done_links)
+        links = get_recent_changes(links, done_links)
         links = get_random_link(links)
         print('Continuing main loop.')
 
