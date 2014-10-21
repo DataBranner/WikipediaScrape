@@ -31,6 +31,7 @@ def main(time_before_new_changed=300):
             '..', 'data', 'links', 'links_unscraped.txt')
     done_links_filename = os.path.join(
             '..', 'data', 'links', 'done_links.txt')
+    links = None
     while True:
         # Use back-up timer here. Function scrape_links() has its own, but we 
         # need one here lest too few new links are available when we scrape and
@@ -40,7 +41,7 @@ def main(time_before_new_changed=300):
         if input('Proceed? (require "yes"): ') != 'yes':
             print('Exiting.')
             break
-        links, done_links = scrape_links(time_before_new_changed)
+        links, done_links = scrape_links(time_before_new_changed, links=links)
         # We always save the current scraped and unscraped links now.
         with open(unscraped_links_filename, 'w') as f:
             f.write('\n'.join(links))
@@ -151,7 +152,7 @@ def scrape_links(time_before_new_changed, title=None, links=None,
             # Usually because "HTTP Error 404: Not Found", so restore title.
             # But temporarily we are leaving titles unrestored, as we think
             # some of these were previously unfiltered `redlink=1" cases.
-#            links.add(title)
+            links.add(title)
             try:
                 done_links.remove(title)
             except KeyError:
